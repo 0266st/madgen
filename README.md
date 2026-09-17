@@ -197,3 +197,11 @@ uv run pytest       # テスト
 ```
 
 GitHub Actions（`.github/workflows/ci.yml`）で、push（main）と pull request のたびに lint とテストを実行します。CI では lyrics extra を入れません。テストは torch や whisperX を読み込まず、歌詞モードの素材 DB はテスト内で手作りします。
+
+## ライセンス
+
+[MIT License](LICENSE)（© 2026 0266st）
+
+- ライセンスが対象にするのは、このツールのコードだけです。素材（source の音声・動画）や target の楽曲・歌詞の権利は、それぞれの権利者に帰属します。生成物の公開や配布は、素材の権利を確認したうえで行ってください。
+- ffmpeg は、依存パッケージ imageio-ffmpeg に同梱されたバイナリ（GPLv3 でビルドされたもの）を別プロセスとして呼び出しています。このリポジトリには ffmpeg を含みません。
+- 歌詞モードで実行時にダウンロードするモデル（whisperX large-v3、`facebook/wav2vec2-xlsr-53-espeak-cv-ft`）は、それぞれのライセンスに従います。
