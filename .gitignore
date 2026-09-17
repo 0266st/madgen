@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+# large inputs and generated outputs
+sources/
+target/
+work/
+*.sqlite
+*.sqlite.cache/

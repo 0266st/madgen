@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Ruff
+        run: uv run --locked ruff check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      # The lyrics extra (torch, whisperX) is not installed: the tests never load it,
+      # and the phoneme corpus they need is inserted by hand.
+      - name: Install
+        run: uv sync --locked
+      - name: Pytest
+        run: uv run --locked pytest -q
