@@ -64,8 +64,46 @@ jobs:
           name: windows
           path: madgen-*-windows-x64.zip
 
+  linux:
+    # Built on the oldest supported runner: a binary built against a newer glibc will not start on
+    # older distributions, but one built here runs on anything with glibc 2.35 or newer.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.1.0
+        with:
+          python-version: "3.12"
+      # Only the base dependencies, as for Windows: the lyrics extra needs a GPU to be useful.
+      - name: Install
+        run: uv pip install --system . pyinstaller
+      - name: Build
+        run: >
+          pyinstaller --noconfirm --clean --name madgen
+          --collect-binaries imageio_ffmpeg --collect-binaries soundfile
+          --collect-submodules madgen
+          --exclude-module torch --exclude-module transformers
+          --exclude-module matplotlib --exclude-module tkinter
+          packaging/entry.py
+      - name: Smoke test
+        run: dist/madgen/madgen --help
+      - name: Record the bundled ffmpeg build
+        run: |
+          exe=$(find dist/madgen/_internal/imageio_ffmpeg -name 'ffmpeg*' -type f | head -1)
+          { "$exe" -hide_banner -version; echo; "$exe" -hide_banner -buildconf; } > dist/madgen/FFMPEG-BUILD.txt
+          cp -r THIRD_PARTY_LICENSES dist/madgen/
+          cp LICENSE README.md dist/madgen/
+      - name: Pack
+        run: |
+          name="madgen-${GITHUB_REF_NAME//\//-}-linux-x64"
+          mv dist/madgen "dist/$name"
+          tar -czf "$name.tar.gz" -C dist "$name"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linux
+          path: madgen-*-linux-x64.tar.gz
+
   release:
-    needs: [build, windows]
+    needs: [build, windows, linux]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
@@ -73,11 +111,15 @@ jobs:
     steps:
       - uses: actions/download-artifact@v8
         with:
-          name: windows
-      - name: Attach the Windows build to the release
+          pattern: "{windows,linux}"
+          merge-multiple: true
+      - name: Attach the builds to the release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" madgen-*-windows-x64.zip --repo "$GITHUB_REPOSITORY" --generate-notes --verify-tag || gh release upload "$GITHUB_REF_NAME" madgen-*-windows-x64.zip --repo "$GITHUB_REPOSITORY" --clobber
+        run: |
+          files=(madgen-*-windows-x64.zip madgen-*-linux-x64.tar.gz)
+          gh release create "$GITHUB_REF_NAME" "${files[@]}" --repo "$GITHUB_REPOSITORY" --generate-notes --verify-tag \
+            || gh release upload "$GITHUB_REF_NAME" "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
 
   pypi:
     needs: build

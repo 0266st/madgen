@@ -26,17 +26,27 @@ pip install madgen
 pip install "madgen[lyrics]"
 ```
 
-### Windows 版（Python を入れずに使う）
+### Windows / Linux 版（Python を入れずに使う）
 
-[Releases](https://github.com/0266st/madgen/releases) の `madgen-vX.Y.Z-windows-x64.zip` を展開し、中の `madgen.exe` をコマンドプロンプトや PowerShell から実行してください。
+[Releases](https://github.com/0266st/madgen/releases) から、環境に合うものを落として展開してください。
 
 ```
+# Windows: madgen-vX.Y.Z-windows-x64.zip を展開して
 madgen.exe build-corpus --source sources\ --db work\corpus.sqlite
 madgen.exe render --db work\corpus.sqlite --melody target\target.mid --out-dir work\out --video
 ```
 
+```sh
+# Linux: madgen-vX.Y.Z-linux-x64.tar.gz を展開して
+tar xzf madgen-vX.Y.Z-linux-x64.tar.gz && cd madgen-vX.Y.Z-linux-x64
+./madgen build-corpus --source sources/ --db work/corpus.sqlite
+./madgen render --db work/corpus.sqlite --melody target/target.mid --out-dir work/out --video
+```
+
 - **メロディモード専用**です。歌詞モード（音素解析）は含みません。歌詞モードを使う場合は、上の `uv tool install "madgen[lyrics]"` で入れてください（GPU 推奨）。
-- ffmpeg を同梱しているため、この zip には **GPLv3** が適用されます（madgen 自身のソースコードは MIT のままです）。詳細は zip 内の `THIRD_PARTY_LICENSES/` を参照してください。
+- ffmpeg を同梱しているため、これらの配布物には **GPLv3** が適用されます（madgen 自身のソースコードは MIT のままです）。詳細は同梱の `THIRD_PARTY_LICENSES/` を参照してください。
+- Linux 版は glibc 2.35 以降（Ubuntu 22.04、Debian 12 以降など）で動きます。それより古い環境では `uv tool install madgen` を使ってください。
+- **macOS 用の配布物はありません**。`uv tool install madgen` で入れてください（必要なものは自動で用意されます）。
 
 リポジトリを直接使う場合:
 
