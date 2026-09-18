@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 
@@ -132,9 +133,20 @@ def _log_path(args: argparse.Namespace) -> Path:
     return args.db.with_name(args.db.name + ".log")
 
 
+def _use_utf8() -> None:
+    """Windows consoles still default to a local code page, and printing Japanese there raises
+    UnicodeEncodeError. Ask for UTF-8, and never let the encoding itself crash a run."""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
 def main(argv: list[str] | None = None) -> None:
     from .progress import progress
 
+    _use_utf8()
     args = build_parser().parse_args(argv)
     progress.open(_log_path(args))
     status = "failed"
