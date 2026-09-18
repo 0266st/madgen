@@ -274,20 +274,7 @@ uv run ruff check   # lint（設定は pyproject.toml）
 uv run pytest       # テスト
 ```
 
-GitHub Actions（`.github/workflows/ci.yml`）で、push（main）と pull request のたびに lint とテストを実行します。CI では lyrics extra を入れません。テストは torch や whisperX を読み込まず、歌詞モードの素材 DB はテスト内で手作りします。
-
-### リリース
-
-コミットメッセージは [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0/) に従ってください。これをもとにバージョンと変更履歴が自動で決まります。
-
-| 書き出し | 例 | バージョン（1.0.0 未満のあいだ） |
-| --- | --- | --- |
-| `feat:` | `feat: 動画のレイヤー合成を追加` | 0.1.1 → 0.2.0 |
-| `fix:` | `fix: 母音が伸びないのを直す` | 0.1.1 → 0.1.2 |
-| `feat!:` / `BREAKING CHANGE:` | `feat!: CLI のオプション名を変更` | 0.1.1 → 0.2.0 |
-| `chore:` / `test:` | `chore: 依存を更新` | 変わらない（変更履歴にも出ません） |
-
-main に push されると release-please が「リリース用の PR」を作ります（バージョンと `CHANGELOG.md` の更新）。**その PR をマージすると**、タグ・GitHub Release・Windows / Linux 版のバイナリ添付・PyPI への公開まで自動で行われます。手でタグを打つ必要はありません。
+開発の手順やコミットメッセージの規約は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
 
 ## ライセンス
 
