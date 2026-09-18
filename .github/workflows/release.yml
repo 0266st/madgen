@@ -23,8 +23,63 @@ jobs:
           name: dist
           path: dist/
 
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      # Only the base dependencies: the lyrics extra (torch, whisperX) would add several GB, and
+      # needs a GPU to be useful. Those users install from PyPI instead.
+      - name: Install
+        run: uv pip install --system . pyinstaller
+      - name: Build
+        run: >
+          pyinstaller --noconfirm --clean --name madgen
+          --collect-binaries imageio_ffmpeg --collect-binaries soundfile
+          --collect-submodules madgen
+          --exclude-module torch --exclude-module transformers
+          --exclude-module matplotlib --exclude-module tkinter
+          packaging/entry.py
+      - name: Smoke test
+        run: dist/madgen/madgen.exe --help
+      # The bundled ffmpeg is GPLv3: record exactly which build it is, next to the licence text.
+      - name: Record the bundled ffmpeg build
+        shell: bash
+        run: |
+          exe=$(find dist/madgen/_internal/imageio_ffmpeg -name 'ffmpeg*.exe' | head -1)
+          { "$exe" -hide_banner -version; echo; "$exe" -hide_banner -buildconf; } > dist/madgen/FFMPEG-BUILD.txt
+          cp -r THIRD_PARTY_LICENSES dist/madgen/
+          cp LICENSE README.md dist/madgen/
+      - name: Zip
+        shell: bash
+        run: |
+          cd dist && mv madgen "madgen-${GITHUB_REF_NAME:-dev}-windows-x64"
+          7z a -tzip "../madgen-${GITHUB_REF_NAME:-dev}-windows-x64.zip" "madgen-${GITHUB_REF_NAME:-dev}-windows-x64" >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: madgen-*-windows-x64.zip
+
+  release:
+    needs: [build, windows]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows
+      - name: Attach the Windows build to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" madgen-*-windows-x64.zip --repo "$GITHUB_REPOSITORY" --generate-notes --verify-tag || gh release upload "$GITHUB_REF_NAME" madgen-*-windows-x64.zip --repo "$GITHUB_REPOSITORY" --clobber
+
   pypi:
     needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     # Trusted publishing: PyPI trusts this workflow, so no API token is stored in the repository.
     environment: pypi

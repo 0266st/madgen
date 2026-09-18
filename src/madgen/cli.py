@@ -79,8 +79,18 @@ def _add_render_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--plan", type=Path, default=None, help="write the chosen segments as JSON")
 
 
+def _version() -> str:
+    from importlib.metadata import PackageNotFoundError, version
+
+    try:
+        return version("madgen")
+    except PackageNotFoundError:  # running from a source tree without an install
+        return "unknown"
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="madgen", description="音MAD auto generator")
+    parser.add_argument("--version", action="version", version=f"madgen {_version()}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     b = sub.add_parser("build-corpus", help="analyze sources into the corpus DB (diff only)")
