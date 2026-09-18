@@ -9,8 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
       - name: Check that the tag matches the version in pyproject.toml
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
@@ -18,7 +18,7 @@ jobs:
           tag=${GITHUB_REF_NAME#v}
           test "$version" = "$tag" || { echo "tag $tag != version $version"; exit 1; }
       - run: uv build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
@@ -26,8 +26,8 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           python-version: "3.12"
       # Only the base dependencies: the lyrics extra (torch, whisperX) would add several GB, and
@@ -59,7 +59,7 @@ jobs:
           name="madgen-${GITHUB_REF_NAME//\//-}-windows-x64"
           cd dist && mv madgen "$name"
           7z a -tzip "../$name.zip" "$name" >/dev/null
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: windows
           path: madgen-*-windows-x64.zip
@@ -71,7 +71,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: windows
       - name: Attach the Windows build to the release
@@ -88,7 +88,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
