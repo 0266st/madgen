@@ -1,0 +1,47 @@
+name: 機能の提案
+description: こういうことをしたい、という提案
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        このプロジェクトは「簡単に音MADを作る」ことを目的としており、多機能を目指してはいません。
+        その前提のうえで提案してください。
+
+  - type: textarea
+    id: what
+    attributes:
+      label: やりたいこと
+      description: どんな音MADを作りたくて、何ができると嬉しいのかを書いてください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: now
+    attributes:
+      label: 今はどうしているか
+      description: 現状の回避方法や、できなくて困っている点があれば書いてください。
+
+  - type: textarea
+    id: tradeoff
+    attributes:
+      label: 利点と欠点
+      description: それが入ることで何が良くなるか、逆に何が犠牲になるか（操作が増える、処理が重くなる、など）を書いてください。
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: madgen のバージョン
+      placeholder: madgen 0.2.0
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: Windows 11 / Ubuntu 24.04
+    validations:
+      required: true
