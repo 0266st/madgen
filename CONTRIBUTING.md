@@ -33,7 +33,7 @@ GitHub Actions（`.github/workflows/ci.yml`）で、push（main）と pull reque
 
 バージョン番号と変更履歴は自動、リリースの引き金は手動（署名タグ）です。
 
-1. main に push されると、release-please が「リリース用の PR」を作ります（`pyproject.toml` のバージョンと `CHANGELOG.md` の更新）。コミットが溜まるほど、その PR の内容が更新されていきます。
+1. main に push されると、release-please が「リリース用の PR」を作ります（`pyproject.toml` のバージョンと `CHANGELOG.md` の更新）。コミットが溜まるほど、その PR の内容が更新されていきます。同じワークフローの中で `uv.lock` の更新と lint・テストまで済ませます（Actions が作ったブランチでは他のワークフローが動かないため、PR 上にはチェック結果が表示されません。結果は Actions の「Release PR」の実行を見てください）。
 2. その PR をマージします。**この時点ではまだ何も公開されません。**
 3. 署名タグを押します。これが引き金です。
 

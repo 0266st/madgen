@@ -6,6 +6,7 @@ name: Release PR
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   release-pr:
@@ -15,7 +16,39 @@ jobs:
       pull-requests: write
     steps:
       - uses: googleapis/release-please-action@v5.0.0
+        id: release
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
           skip-github-release: true
+
+      # The rest happens here rather than in a workflow of its own: a branch pushed (and a PR
+      # opened) by GITHUB_TOKEN does not start other workflow runs, so nothing would react to the
+      # release PR on its own.
+      - uses: actions/checkout@v7
+        if: ${{ steps.release.outputs.prs_created == 'true' }}
+        with:
+          ref: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+      - uses: astral-sh/setup-uv@v10.1.0
+        if: ${{ steps.release.outputs.prs_created == 'true' }}
+
+      # release-please bumps pyproject.toml, but uv.lock records the version too: without this the
+      # release PR would leave a stale lockfile behind and the next "uv sync --locked" would fail.
+      - name: Update uv.lock to the bumped version
+        if: ${{ steps.release.outputs.prs_created == 'true' }}
+        run: |
+          uv lock
+          if ! git diff --quiet uv.lock; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: update uv.lock" uv.lock
+            git push
+          fi
+
+      # CI does not run on the release PR either (same reason), so check it here.
+      - name: Lint and test the release PR
+        if: ${{ steps.release.outputs.prs_created == 'true' }}
+        run: |
+          uv sync --locked
+          uv run --locked ruff check
+          uv run --locked pytest -q
