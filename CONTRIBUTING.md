@@ -31,12 +31,26 @@ GitHub Actions（`.github/workflows/ci.yml`）で、push（main）と pull reque
 
 ## リリース
 
-手でタグを打つ必要はありません。
+バージョン番号と変更履歴は自動、リリースの引き金は手動（署名タグ）です。
 
-1. main に push されると、release-please が「リリース用の PR」を作ります（バージョンと `CHANGELOG.md` の更新）。コミットメッセージが溜まるほど、その PR の内容が更新されていきます。
-2. その PR をマージすると、タグと GitHub Release が作られ、続けて次が自動で走ります。
-   - Windows 版 zip と Linux 版 tar.gz のビルドと Release への添付
+1. main に push されると、release-please が「リリース用の PR」を作ります（`pyproject.toml` のバージョンと `CHANGELOG.md` の更新）。コミットが溜まるほど、その PR の内容が更新されていきます。
+2. その PR をマージします。**この時点ではまだ何も公開されません。**
+3. 署名タグを押します。これが引き金です。
+
+   ```sh
+   git checkout main && git pull
+   git tag -s "v$(uv version --short)" -m "v$(uv version --short)"
+   git push origin "v$(uv version --short)"
+   ```
+
+4. あとは自動で走ります。
+   - Windows 版 zip と Linux 版 tar.gz のビルド
+   - GitHub Release の作成（上のバイナリを添付）
    - PyPI への公開（Trusted Publishing。API トークンは保存していません）
+
+タグを CI に作らせると軽量タグになり署名が入らないため、この形にしています。GitHub で「Verified」と表示させるには、署名に使う SSH 鍵を Settings → SSH and GPG keys に **Signing key** として登録してください（認証用として登録済みでも、署名用に別途必要です）。
+
+PyPI に上がるファイルには、どのリポジトリのどのワークフローが作ったかを示す来歴証明（PEP 740 アテステーション）が自動で付きます。
 
 配布物には ffmpeg（GPLv3）を同梱するため、`THIRD_PARTY_LICENSES/` も一緒に入ります。詳細は [THIRD_PARTY_LICENSES/README.md](THIRD_PARTY_LICENSES/README.md) を参照してください。
 
