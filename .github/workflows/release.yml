@@ -1,22 +1,43 @@
 name: Release
 
+# release-please watches main: it keeps a "release PR" up to date from the commit messages
+# (feat: / fix: / feat!: ...). Merging that PR creates the tag and the GitHub release, and the
+# jobs below then build the artifacts and publish to PyPI.
+#
+# Everything lives in one workflow on purpose: a tag created by CI does not start another
+# workflow run (GitHub prevents that loop), so a separate tag-triggered workflow would never fire.
+#
+# workflow_dispatch builds the artifacts without releasing anything, to test this file.
+
 on:
   push:
-    tags: ["v*"]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
+  release-please:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v5.0.0
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
   build:
+    needs: release-please
+    if: ${{ always() && (needs.release-please.outputs.released == 'true' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.1.0
-      - name: Check that the tag matches the version in pyproject.toml
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          version=$(uv version --short)
-          tag=${GITHUB_REF_NAME#v}
-          test "$version" = "$tag" || { echo "tag $tag != version $version"; exit 1; }
       - run: uv build
       - uses: actions/upload-artifact@v7
         with:
@@ -24,6 +45,8 @@ jobs:
           path: dist/
 
   windows:
+    needs: release-please
+    if: ${{ always() && (needs.release-please.outputs.released == 'true' || github.event_name == 'workflow_dispatch') }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
@@ -70,6 +93,8 @@ jobs:
           path: madgen-*-windows-x64.zip
 
   linux:
+    needs: release-please
+    if: ${{ always() && (needs.release-please.outputs.released == 'true' || github.event_name == 'workflow_dispatch') }}
     # Built on the oldest supported runner: a binary built against a newer glibc will not start on
     # older distributions, but one built here runs on anything with glibc 2.35 or newer.
     runs-on: ubuntu-22.04
@@ -109,9 +134,9 @@ jobs:
           name: linux
           path: madgen-*-linux-x64.tar.gz
 
-  release:
-    needs: [build, windows, linux]
-    if: startsWith(github.ref, 'refs/tags/v')
+  attach:
+    needs: [release-please, windows, linux]
+    if: ${{ needs.release-please.outputs.released == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -123,14 +148,18 @@ jobs:
       - name: Attach the builds to the release
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.release-please.outputs.tag }}
         run: |
-          files=(madgen-*-windows-x64.zip madgen-*-linux-x64.tar.gz)
-          gh release create "$GITHUB_REF_NAME" "${files[@]}" --repo "$GITHUB_REPOSITORY" --generate-notes --verify-tag \
-            || gh release upload "$GITHUB_REF_NAME" "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
+          # release-please already created the release; only the binaries are missing.
+          for f in madgen-*-windows-x64.zip madgen-*-linux-x64.tar.gz; do
+            mv "$f" "$(echo "$f" | sed "s/madgen-main-/madgen-$TAG-/")"
+          done
+          gh release upload "$TAG" madgen-*-windows-x64.zip madgen-*-linux-x64.tar.gz \
+            --repo "$GITHUB_REPOSITORY" --clobber
 
   pypi:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [release-please, build]
+    if: ${{ needs.release-please.outputs.released == 'true' }}
     runs-on: ubuntu-latest
     # Trusted publishing: PyPI trusts this workflow, so no API token is stored in the repository.
     environment: pypi
