@@ -1,0 +1,23 @@
+name: 機能の提案
+description: こういうことをしたい、という提案
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: やりたいこと
+      description: どんな音MADを作りたくて、何ができると嬉しいのかを書いてください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: now
+    attributes:
+      label: 今はどうしているか
+      description: 現状の回避方法や、できなくて困っている点があれば書いてください。
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: 実現方法の案
+      description: 思いつくものがあれば。なくても構いません。

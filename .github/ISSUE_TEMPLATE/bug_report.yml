@@ -1,0 +1,74 @@
+name: 不具合の報告
+description: 動かない、出力がおかしい、などの報告
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: 何が起きたか
+      description: 期待した動作と、実際の動作を書いてください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: 実行したコマンド
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: madgen のバージョン
+      description: "`madgen --version` の出力"
+      placeholder: madgen 0.2.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: 導入方法
+      options:
+        - PyPI（uv tool install / pip install）
+        - 配布物（Windows 版 zip / Linux 版 tar.gz）
+        - リポジトリから直接（uv sync）
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: Windows 11 / Ubuntu 24.04 / macOS 15
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 使った機能
+      multiple: true
+      options:
+        - メロディモード（--melody）
+        - 歌詞モード（--ust）
+        - 素材解析（build-corpus）
+        - 音素解析（--phonemes wav2vec2）
+        - 動画の出力（--video / --video-out）
+    validations:
+      required: true
+
+  - type: textarea
+    id: log
+    attributes:
+      label: ログ
+      description: "進捗ログ（`--out-dir` 内の `render.log`、または `DB名.log`）の該当部分と、画面に出たエラーを貼ってください。"
+      render: shell
+
+  - type: textarea
+    id: material
+    attributes:
+      label: 素材と target について
+      description: 差し支えない範囲で、素材の形式（動画/音声、長さ）や target（MIDI / UST）の特徴を書いてください。ファイル自体は不要です。
