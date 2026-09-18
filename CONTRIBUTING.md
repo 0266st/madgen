@@ -1,65 +1,90 @@
 # 開発について
 
-## 環境
+## 環境の構築
 
 ```sh
 uv sync                  # メロディモードのみ
 uv sync --extra lyrics   # 歌詞モードの素材解析も動かす場合（GPU 推奨）
 ```
 
+`uv add` / `uv remove` / extra を指定しない `uv sync` を実行すると lyrics extra が削除される。その場合は `uv sync --extra lyrics` で再導入すること。
+
 ## lint とテスト
 
 ```sh
-uv run ruff check   # 設定は pyproject.toml
+uv run ruff check   # 設定は pyproject.toml に記載
 uv run pytest
 ```
 
-GitHub Actions（`.github/workflows/ci.yml`）で、push（main）と pull request のたびに同じものを実行します。CI では lyrics extra を入れません。テストは torch や whisperX を読み込まず、歌詞モードの素材 DB はテスト内で手作りします。
+GitHub Actions（`.github/workflows/ci.yml`）が、main への push と pull request のたびに同じものを実行する。CI では lyrics extra を導入しない。テストは torch や whisperX を読み込まず、歌詞モードの素材 DB はテスト内で生成する。
 
 ## コミットメッセージ
 
-[Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0/) に従ってください。これをもとに、リリース時のバージョンと変更履歴が自動で決まります。
-
-| 書き出し | 例 | バージョン（1.0.0 未満のあいだ） |
-| --- | --- | --- |
-| `feat:` | `feat: 動画のレイヤー合成を追加` | 0.1.1 → 0.2.0 |
-| `fix:` | `fix: 母音が伸びないのを直す` | 0.1.1 → 0.1.2 |
-| `feat!:` / `BREAKING CHANGE:` | `feat!: CLI のオプション名を変更` | 0.1.1 → 0.2.0 |
-| `chore:` / `test:` | `chore: 依存を更新` | 変わらない（変更履歴にも出ません） |
-
-本文には「なぜそうしたか」を書いてください。特に、試して駄目だった方法や、ハマった点が残っていると後で助かります。
+書式の決まりは設けない。ただし本文には「なぜそうしたか」を記載すること。特に、試して駄目だった方法や、原因の特定に時間を要した点を残しておくと、後から読む際の助けになる。
 
 ## リリース
 
-バージョン番号と変更履歴は自動、リリースの引き金は手動（署名タグ）です。
+バージョンは手動で決定する。タグを push した以降の工程はすべて自動で実行される。
 
-1. main に push されると、release-please が「リリース用の PR」を作ります（`pyproject.toml` のバージョンと `CHANGELOG.md` の更新）。コミットが溜まるほど、その PR の内容が更新されていきます。
-2. その PR をマージします。**この時点ではまだ何も公開されません。**
-3. 署名タグを押します。これが引き金です。
+1. バージョンを更新し、main にマージする。
+
+   ```sh
+   uv version 0.3.0        # プレリリースの場合は 0.3.0a1 のように指定
+   uv lock                 # uv.lock にもバージョンが記録されているため必須
+   ```
+
+2. 署名タグを push する。**これがリリースの起点となる。**
 
    ```sh
    git checkout main && git pull
-   git tag -s "v$(uv version --short)" -m "v$(uv version --short)"
-   git push origin "v$(uv version --short)"
+   git tag -s v0.3.0 -m "v0.3.0"
+   git push origin v0.3.0
    ```
 
-4. あとは自動で走ります。
-   - Windows 版 zip と Linux 版 tar.gz のビルド
-   - GitHub Release の作成（上のバイナリを添付）
-   - PyPI への公開（Trusted Publishing。API トークンは保存していません）
+3. 以降は自動で実行される（所要時間は5分程度）。
 
-タグを CI に作らせると軽量タグになり署名が入らないため、この形にしています。GitHub で「Verified」と表示させるには、署名に使う SSH 鍵を Settings → SSH and GPG keys に **Signing key** として登録してください（認証用として登録済みでも、署名用に別途必要です）。
+   | 順序 | 内容 |
+   | --- | --- |
+   | 1 | タグと `pyproject.toml` のバージョンの一致を確認（不一致の場合はここで停止） |
+   | 2 | sdist・wheel・Windows 版 zip・Linux 版 tar.gz をビルド |
+   | 3 | GitHub Release を作成し、バイナリを添付（説明文はコミットから自動生成） |
+   | 4 | PyPI に公開（Trusted Publishing を使用し、API トークンは保存しない） |
+   | 5 | Release の説明文を `CHANGELOG.md` の冒頭に追記し、main に push |
 
-PyPI に上がるファイルには、どのリポジトリのどのワークフローが作ったかを示す来歴証明（PEP 740 アテステーション）が自動で付きます。
+`CHANGELOG.md` はタグの後に更新されるため、タグが指すコミットにはその項目は含まれない。
 
-配布物には ffmpeg（GPLv3）を同梱するため、`THIRD_PARTY_LICENSES/` も一緒に入ります。詳細は [THIRD_PARTY_LICENSES/README.md](THIRD_PARTY_LICENSES/README.md) を参照してください。
+### プレリリース
 
-## 配布物のビルドを手元で確認する
+タグに `-` が含まれる場合、GitHub では自動的にプレリリースとして扱われる。PyPI でも `pip install madgen` では導入されず、`--pre` を付けた場合にのみ導入される。
 
-タグを打たずにビルドだけ試せます。
+| タグ | `pyproject.toml` の version |
+| --- | --- |
+| `v0.3.0-alpha.1` | `0.3.0a1` |
+| `v0.3.0-beta.2` | `0.3.0b2` |
+| `v0.3.0-rc.1` | `0.3.0rc1` |
+
+タグは SemVer、`pyproject.toml` は PEP 440 と表記法が異なるが、バージョンとして等価であれば一致とみなす。
+
+### 署名の検証
+
+GitHub 上で「Verified」と表示させるには、署名に使用する SSH 鍵を Settings → SSH and GPG keys に **Signing key** として登録する必要がある。認証用として登録済みであっても、署名用の登録は別途必要となる。
+
+タグを CI に作成させると軽量タグとなり署名を付与できないため、タグの作成のみ手動で行う。
+
+### 公開後の訂正
+
+PyPI は同一バージョンの再公開を許可しない。取り下げ（yank）は可能だが番号は再利用できないため、次の番号で公開し直すこと。GitHub Release とタグは削除可能。
+
+## 配布物のビルドの確認
+
+タグを push せずにビルドのみ試すことができる。
 
 ```sh
 gh workflow run release.yml --ref <ブランチ名>
 ```
 
-`release-please` のジョブは飛ばされ、Windows / Linux のバイナリだけが作られます（Actions の成果物から取得できます）。
+公開に関わるジョブは実行されず、Windows・Linux 版のバイナリのみが生成される（Actions の成果物から取得できる）。
+
+## 配布物のライセンス
+
+配布物には ffmpeg（GPLv3）を同梱するため、`THIRD_PARTY_LICENSES/` も同梱される。詳細は [THIRD_PARTY_LICENSES/README.md](THIRD_PARTY_LICENSES/README.md) を参照すること。
