@@ -55,8 +55,10 @@ jobs:
       - name: Zip
         shell: bash
         run: |
-          cd dist && mv madgen "madgen-${GITHUB_REF_NAME:-dev}-windows-x64"
-          7z a -tzip "../madgen-${GITHUB_REF_NAME:-dev}-windows-x64.zip" "madgen-${GITHUB_REF_NAME:-dev}-windows-x64" >/dev/null
+          # A branch name may contain "/", which cannot be part of a file name.
+          name="madgen-${GITHUB_REF_NAME//\//-}-windows-x64"
+          cd dist && mv madgen "$name"
+          7z a -tzip "../$name.zip" "$name" >/dev/null
       - uses: actions/upload-artifact@v4
         with:
           name: windows
