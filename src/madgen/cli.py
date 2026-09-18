@@ -72,6 +72,10 @@ def _add_render_args(p: argparse.ArgumentParser) -> None:
                    help="drum tracks (GM channel 10): samples = borrow a phoneme per instrument "
                         "(needs the phoneme corpus), pitched = treat note numbers as pitches like "
                         "earlier versions did, off = silent (the video still follows the track)")
+    p.add_argument("--drum-material", action="append", metavar="INSTRUMENT=PHONEMES",
+                   help="with --percussion samples: the material one instrument prefers, best first "
+                        "(repeatable). INSTRUMENT is its name or a GM note number; "
+                        "e.g. --drum-material キック=b,g --drum-material 42=ts,s")
     p.add_argument("--filter", action="append", metavar="TRACK=SPEC",
                    help="filter/EQ for one track (repeatable), or all=SPEC for every track. "
                         "SPEC is hp:80, lp:8000, peak:3000:+4[:Q], lowshelf:200:-3, highshelf:5000:+2, "

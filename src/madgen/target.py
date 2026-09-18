@@ -6,6 +6,7 @@ renderer leaves it silent (the previous note is never stretched into it).
 
 from __future__ import annotations
 
+import math
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -55,6 +56,11 @@ class Voice:
 
 def midi_to_hz(note: float) -> float:
     return 440.0 * 2 ** ((note - 69) / 12)
+
+
+def hz_to_midi(hz: float) -> int:
+    """The note number a unit was built from. On a drum track that number names an instrument."""
+    return int(round(69 + 12 * math.log2(hz / 440.0)))
 
 
 def _decode_name(msg: mido.MetaMessage) -> str:

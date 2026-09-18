@@ -10,7 +10,7 @@ import soundfile as sf
 from madgen import db
 from madgen.cli import build_parser
 from madgen.corpus import build_corpus
-from madgen.phonemes import drum_for
+from madgen.phonemes import drum_for, parse_drum_materials
 from madgen.render import render
 from madgen.target import PERCUSSION_CHANNEL, load_midi
 
@@ -146,3 +146,69 @@ def test_drum_tracks_are_still_matched_by_track(tmp_path):
     mid = _drum_midi(tmp_path)
     voices = load_midi(mid)
     assert all(v.percussion for v in voices)
+
+
+def _contested_corpus(tmp_path):
+    """Two segments a hi-hat and a snare both want, one clearly better: they have to compete."""
+    rng = np.random.default_rng(2)
+    tone = np.arange(SR) / SR
+    t = np.arange(int(SR * 0.12)) / SR
+    src = tmp_path / "two.wav"
+    # A second of tone first, so the pitch corpus is not empty; then the two contested bursts.
+    sf.write(src, np.concatenate([
+        sum(np.sin(2 * np.pi * 110 * k * tone) / k for k in range(1, 6)) * 0.3,
+        rng.standard_normal(t.size) * 0.3,
+        rng.standard_normal(t.size) * 0.05,
+    ]).astype(np.float32), SR)
+    db_path = tmp_path / "two.sqlite"
+    build_corpus([src], db_path, workers=1)
+    conn = db.connect(db_path)
+    sid = conn.execute("SELECT source_id FROM sources").fetchone()[0]
+    ids = {}
+    for label, start, rms in (("loud", 1.0, -12.0), ("quiet", 1.12, -30.0)):
+        cur = conn.execute(
+            "INSERT INTO segments (source_id, start_sec, end_sec, phoneme, f0_hz, video_ref, "
+            "f0_std_cents, rms_db, kind) VALUES (?, ?, ?, 'ts', NULL, NULL, 0, ?, 'phoneme')",
+            (sid, start, start + 0.12, rms))
+        conn.execute("INSERT INTO phoneme_candidates VALUES (?, 1, 'ts', 0.9)", (cur.lastrowid,))
+        ids[label] = cur.lastrowid
+    conn.commit()
+    return db_path, ids
+
+
+@pytest.mark.parametrize("notes", [(42, 38), (38, 42)])
+def test_the_kit_does_not_depend_on_the_order_of_the_song(tmp_path, notes):
+    """Whoever picks first gets the better material, so it must not be whoever plays first."""
+    db_path, ids = _contested_corpus(tmp_path)
+    plan, _ = _render(db_path, _drum_midi(tmp_path, notes=notes), tmp_path, f"order{notes[0]}")
+    picked = {e["instrument"]: e["segment_id"] for e in plan}
+    # The snare carries the beat and the hi-hat does not, so the snare takes the louder segment
+    # whichever of the two the song opens with.
+    assert picked["スネア"] == ids["loud"]
+    assert picked["ハイハット"] == ids["quiet"]
+
+
+def test_drum_material_overrides_the_default(tmp_path):
+    db_path = _corpus(tmp_path)
+    plan, _ = _render(db_path, _drum_midi(tmp_path), tmp_path, "material",
+                      "--drum-material", "キック=g", "--drum-material", "42=s")
+    picked = {e["instrument"]: e["segment_id"] for e in plan}
+    conn = db.connect(db_path)
+
+    def phoneme_of(segment_id):
+        return conn.execute("SELECT phoneme FROM segments WHERE id = ?", (segment_id,)).fetchone()[0]
+
+    assert phoneme_of(picked["キック"]) == "g"        # by name, instead of the default "b"
+    assert phoneme_of(picked["ハイハット"]) == "s"     # by GM note number, instead of "ts"
+    assert phoneme_of(picked["スネア"]) == "sh"        # untouched
+
+
+def test_drum_material_is_read_by_name_or_by_note_number():
+    assert parse_drum_materials(["キック=b,g"]) == {"キック": ("b", "g")}
+    assert parse_drum_materials(["36=b"]) == {"キック": ("b",)}
+
+
+@pytest.mark.parametrize("spec", ["キック", "キック=", "=b", "スネヤ=b", "キック=zz", "999=b"])
+def test_bad_drum_material_is_refused(spec):
+    with pytest.raises(SystemExit):
+        parse_drum_materials([spec])

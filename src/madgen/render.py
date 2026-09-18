@@ -21,11 +21,18 @@ import numpy as np
 import soundfile as sf
 
 from . import db, ffmpeg, filters
-from .match import CostWeights, LyricsWeights, select_units, select_units_lyrics, select_units_percussion
-from .phonemes import drum_for, is_voiced_sustained
+from .match import (
+    CostWeights,
+    LyricsWeights,
+    choose_drum_samples,
+    select_units,
+    select_units_lyrics,
+    select_units_percussion,
+)
+from .phonemes import drum_for, is_voiced_sustained, parse_drum_materials
 from .progress import progress
 from .synth import SR, TARGET_RMS_DB, NoteJob, normalize_gain, render_voice, sum_tracks
-from .target import Voice, load_midi
+from .target import Voice, hz_to_midi, load_midi
 from .video import (
     Layer,
     VideoNote,
@@ -357,7 +364,18 @@ def render(args: argparse.Namespace) -> None:
     rendered: list[RenderedVoice] = []
     plan = []
     corrected = 0
-    drum_samples: dict[str, int] = {}   # shared across the drum voices: one sound per instrument
+    # The kit is built before anything is matched, and shared by every drum voice: one sound per
+    # instrument, picked in order of importance rather than in the order the song happens to play
+    # them (see match.choose_drum_samples).
+    drum_samples: dict[str, int] = {}
+    drum_materials = parse_drum_materials(args.drum_material)
+    if drums and args.percussion == "samples":
+        corpus = corpora["phoneme"]
+        choose_drum_samples([u for v in drums for u in v.units], corpus, drum_samples, drum_materials)
+        for name, si in sorted(drum_samples.items(), key=lambda kv: kv[1]):
+            print(f"  kit {name}: {corpus.cand_phoneme[si][0]} "
+                  f"{Path(corpus.source_path[corpus.source_id[si]]).name} "
+                  f"{corpus.start[si]:.2f}-{corpus.end[si]:.2f}s", file=sys.stderr)
     for voice in voices:
         sampled_drums = voice in drums and args.percussion == "samples"
         corpus = corpora["phoneme" if voice.lyrics or sampled_drums else "pitch"]
@@ -365,14 +383,14 @@ def render(args: argparse.Namespace) -> None:
         if voice.lyrics:
             path = select_units_lyrics(voice.units, corpus, lyrics_weights)
         elif sampled_drums:
-            path = select_units_percussion(voice.units, corpus, drum_samples)
+            path = select_units_percussion(voice.units, corpus, drum_samples, drum_materials)
         else:
             path = select_units(voice.units, corpus, weights)
         jobs, refs = [], []
         for unit, si in zip(voice.units, path, strict=True):
             sid = corpus.source_id[si]
             sustained = not voice.lyrics or is_voiced_sustained(unit.phoneme)
-            drum = drum_for(round(69 + 12 * np.log2(unit.target_f0_hz / 440.0))) if sampled_drums else None
+            drum = drum_for(hz_to_midi(unit.target_f0_hz)) if sampled_drums else None
             job = NoteJob(
                 audio_path=corpus.audio_cache[sid],
                 seg_start=float(corpus.start[si]),
