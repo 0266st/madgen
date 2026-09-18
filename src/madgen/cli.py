@@ -68,6 +68,18 @@ def _add_render_args(p: argparse.ArgumentParser) -> None:
                    help="do not balance vocals against the accompaniment automatically")
     p.add_argument("--ust-gain", type=float, default=0.0, metavar="DB", help="gain for all UST tracks (dB)")
     p.add_argument("--melody-gain", type=float, default=0.0, metavar="DB", help="gain for all MIDI tracks (dB)")
+    p.add_argument("--percussion", choices=["samples", "pitched", "off"], default="samples",
+                   help="drum tracks (GM channel 10): samples = borrow a phoneme per instrument "
+                        "(needs the phoneme corpus), pitched = treat note numbers as pitches like "
+                        "earlier versions did, off = silent (the video still follows the track)")
+    p.add_argument("--drum-material", action="append", metavar="INSTRUMENT=PHONEMES",
+                   help="with --percussion samples: the material one instrument prefers, best first "
+                        "(repeatable). INSTRUMENT is its name or a GM note number; "
+                        "e.g. --drum-material キック=b,g --drum-material 42=ts,s")
+    p.add_argument("--filter", action="append", metavar="TRACK=SPEC",
+                   help="filter/EQ for one track (repeatable), or all=SPEC for every track. "
+                        "SPEC is hp:80, lp:8000, peak:3000:+4[:Q], lowshelf:200:-3, highshelf:5000:+2, "
+                        "several separated by commas; e.g. --filter Bass=lp:800,hp:40")
     p.add_argument("--gain", action="append", metavar="TRACK=DB",
                    help="gain for one track (repeatable): a track name, a MIDI track index, or ustN; "
                         "e.g. --gain Bass=-3 --gain ust0=+2")

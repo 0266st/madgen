@@ -5,6 +5,7 @@ import sqlite3
 
 import mido
 import numpy as np
+import pytest
 import soundfile as sf
 
 from madgen.cli import build_parser
@@ -142,3 +143,40 @@ def test_video_falls_back_to_other_voices():
     ]
     # Taking over mid-note starts from the matching point in the segment.
     assert spans[3].source_start == 50.0 + (3.0 - 0.5)
+
+
+def test_unknown_track_names_are_listed(tmp_path):
+    """The names in one project mean nothing in another, so say what this file actually holds."""
+    mid = mido.MidiFile(ticks_per_beat=480)
+    for name, note in (("Piano", 60), ("Strings", 64)):
+        tr = mido.MidiTrack()
+        mid.tracks.append(tr)
+        tr.append(mido.MetaMessage("track_name", name=name))
+        tr.append(mido.Message("note_on", note=note, velocity=100, time=0))
+        tr.append(mido.Message("note_off", note=note, time=480))
+    path = tmp_path / "song.mid"
+    mid.save(path)
+
+    with pytest.raises(SystemExit) as e:
+        load_midi(path, "Bass,Drums")
+    message = str(e.value)
+    assert "Bass,Drums" in message          # what was asked for
+    assert "0:Piano" in message and "1:Strings" in message   # what is there
+    assert "1音" in message                  # and how much of it
+
+
+def test_percussion_tracks_are_named_as_such(tmp_path):
+    from madgen.target import PERCUSSION_CHANNEL
+
+    mid = mido.MidiFile(ticks_per_beat=480)
+    tr = mido.MidiTrack()
+    mid.tracks.append(tr)
+    tr.append(mido.MetaMessage("track_name", name="Kit"))
+    tr.append(mido.Message("note_on", note=36, velocity=100, channel=PERCUSSION_CHANNEL, time=0))
+    tr.append(mido.Message("note_off", note=36, channel=PERCUSSION_CHANNEL, time=480))
+    path = tmp_path / "drums.mid"
+    mid.save(path)
+
+    with pytest.raises(SystemExit) as e:
+        load_midi(path, "Nope")
+    assert "打楽器" in str(e.value)

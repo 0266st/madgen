@@ -6,6 +6,7 @@ it produces the same symbols pyopenjtalk.g2p() does for kana.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from functools import cache
 
 VOWELS = ("a", "i", "u", "e", "o")
@@ -173,3 +174,118 @@ def kana_to_morae(text: str) -> tuple[list[list[str]], list[str]]:
                 unknown.append(s[i])
             i += 1
     return morae, unknown
+
+
+# --- percussion -------------------------------------------------------------------------------
+#
+# A drum track's note numbers name instruments, not pitches (General MIDI channel 10), so the
+# usual pitch matching is meaningless there. Instead each instrument borrows a phoneme that sounds
+# like it: the unvoiced consonants of speech are short bursts of noise, which is what a hi-hat or a
+# snare is, and the voiced plosives are the low thumps a kick needs.
+
+@dataclass(frozen=True)
+class Drum:
+    name: str
+    phonemes: tuple[str, ...]   # preferred material, best first
+    max_sec: float              # hits are cut to this, however long the note is
+    level_db: float = 0.0       # relative to the other parts
+    voiced: bool | None = None  # True: needs a pitched (low) sound, False: wants noise
+    priority: int = 60          # who picks their material first; see PRIORITY below
+
+
+# Instruments claim their material in this order, and whoever claims first gets the better
+# segment (the others are pushed off it). Order of importance, not order of appearance: the kick
+# and the snare carry the beat, so a poor sound there is heard far more than a poor shaker.
+PRIORITY_BEAT = 10        # kick, snare
+PRIORITY_KIT = 30         # hats, toms, cymbals -- the rest of the kit
+PRIORITY_ACCENT = 50      # claps, rims, cowbells: occasional
+PRIORITY_COLOUR = 70      # shakers, tambourines: texture, a poor match barely shows
+
+_HAT = Drum("ハイハット", ("ts", "ch", "t", "k", "s"), 0.08, -2.0, voiced=False, priority=PRIORITY_KIT)
+_SNARE = Drum("スネア", ("sh", "s", "ts", "ch"), 0.15, 0.0, voiced=False, priority=PRIORITY_BEAT)
+_KICK = Drum("キック", ("b", "d", "g", "m"), 0.20, 1.0, voiced=True, priority=PRIORITY_BEAT)
+_TOM = Drum("タム", ("d", "b", "g"), 0.20, 0.0, voiced=True, priority=PRIORITY_KIT)
+_CYMBAL = Drum("シンバル", ("sh", "s"), 0.60, -3.0, voiced=False, priority=PRIORITY_KIT)
+def _perc(name: str, phonemes: tuple[str, ...] = ("t", "k", "d", "ts"), max_sec: float = 0.15,
+          priority: int = PRIORITY_ACCENT) -> Drum:
+    return Drum(name, phonemes, max_sec, -1.0, priority=priority)
+
+
+_PERC = _perc("パーカッション")
+_SHAKER = Drum("シェイカー", ("sh", "s", "ts"), 0.10, -4.0, voiced=False, priority=PRIORITY_COLOUR)
+
+# General MIDI percussion key map (the entries a typical track actually uses).
+DRUMS: dict[int, Drum] = {
+    35: _KICK, 36: _KICK,
+    37: Drum("リムショット", ("t", "k", "p"), 0.08, -2.0, voiced=False, priority=PRIORITY_ACCENT),
+    38: _SNARE, 40: _SNARE,
+    39: Drum("クラップ", ("p", "t", "k"), 0.12, 0.0, voiced=False, priority=PRIORITY_ACCENT),
+    41: _TOM, 43: _TOM, 45: _TOM, 47: _TOM, 48: _TOM, 50: _TOM,
+    42: _HAT, 44: _HAT,
+    46: Drum("オープンハイハット", ("sh", "s", "ts"), 0.20, -2.0, voiced=False, priority=PRIORITY_KIT),
+    49: _CYMBAL, 52: _CYMBAL, 55: _CYMBAL, 57: _CYMBAL,
+    51: Drum("ライド", ("ch", "ts", "k"), 0.20, -3.0, voiced=False, priority=PRIORITY_KIT),
+    53: Drum("ライドベル", ("ch", "ts"), 0.15, -3.0, voiced=False, priority=PRIORITY_ACCENT),
+    59: Drum("ライド", ("ch", "ts", "k"), 0.20, -3.0, voiced=False, priority=PRIORITY_KIT),
+    54: Drum("タンバリン", ("ts", "ch", "sh"), 0.12, -3.0, voiced=False, priority=PRIORITY_COLOUR),
+    56: Drum("カウベル", ("k", "t"), 0.12, -2.0, priority=PRIORITY_ACCENT),
+    # Each of these is its own instrument, and a kit that plays them all with one sound loses the
+    # pattern they make together; the high/low pair of an instrument shares a sound on purpose.
+    60: _perc("ハイボンゴ"), 61: _perc("ローボンゴ"),
+    62: _perc("ハイコンガ"), 63: _perc("ハイコンガ"), 64: _perc("ローコンガ"),
+    65: _perc("ハイティンバレ"), 66: _perc("ローティンバレ"),
+    67: _perc("ハイアゴゴ", ("k", "t", "ts")), 68: _perc("ローアゴゴ", ("k", "t", "ts")),
+    69: _SHAKER, 70: _SHAKER, 82: _SHAKER,
+    75: Drum("クラベス", ("k", "t"), 0.08, -2.0, voiced=False, priority=PRIORITY_ACCENT),
+}
+DEFAULT_DRUM = _PERC
+
+
+def drum_for(note: int) -> Drum:
+    return DRUMS.get(note, DEFAULT_DRUM)
+
+
+DRUM_NAMES: tuple[str, ...] = tuple(dict.fromkeys(
+    [d.name for d in DRUMS.values()] + [DEFAULT_DRUM.name]))
+
+
+def drum_named(key: str) -> Drum:
+    """Resolve what someone wrote on the command line: an instrument name, or a GM note number."""
+    key = key.strip()
+    if key.isdigit():
+        if not 0 <= int(key) <= 127:
+            raise KeyError(key)
+        # A number outside the map is whatever DEFAULT_DRUM covers, so the override lands on
+        # every unlisted instrument at once; naming it is the way to reach just one.
+        return drum_for(int(key))
+    for drum in list(DRUMS.values()) + [DEFAULT_DRUM]:
+        if drum.name == key:
+            return drum
+    raise KeyError(key)
+
+
+def parse_drum_materials(specs: list[str] | None) -> dict[str, tuple[str, ...]]:
+    """`["キック=b,d", "42=sh"]` -> instrument name -> the phonemes to prefer, best first.
+
+    An instrument's default material is a guess about what a voice sounds like; a source whose
+    speaker has no usable "ts" wants to be told so rather than to be scored around.
+    """
+    out: dict[str, tuple[str, ...]] = {}
+    for spec in specs or []:
+        name, sep, rest = spec.partition("=")
+        if not sep or not name.strip() or not rest.strip():
+            raise SystemExit(
+                f"--drum-material expects INSTRUMENT=PHONEMES (e.g. --drum-material キック=b,d), "
+                f"got {spec!r}")
+        try:
+            drum = drum_named(name)
+        except KeyError:
+            raise SystemExit(f"--drum-material: unknown instrument {name.strip()!r}; "
+                             f"名前は {'/'.join(DRUM_NAMES)}、または GM のノート番号") from None
+        phonemes = tuple(p.strip() for p in rest.split(",") if p.strip())
+        unknown = [p for p in phonemes if p not in INVENTORY]
+        if unknown:
+            raise SystemExit(f"--drum-material {name.strip()}: unknown phonemes {' '.join(unknown)}; "
+                             f"使えるのは {' '.join(INVENTORY)}")
+        out[drum.name] = phonemes
+    return out
