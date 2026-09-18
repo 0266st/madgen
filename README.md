@@ -17,7 +17,8 @@ uv sync --extra lyrics   # 歌詞モードの素材解析（whisperX, torch, pyo
 ```
 
 - ffmpeg は `imageio-ffmpeg` の静的バイナリを使うので、システムへのインストールは不要です。
-- 歌詞モードの素材解析は GPU（CUDA）推奨です。初回は whisperX large-v3 と音素認識モデル（計約4 GB）をダウンロードします。
+- **歌詞モードの素材解析には GPU（CUDA）が実質必須です**（上級者向け）。初回は whisperX large-v3 と音素認識モデル（計約4 GB）をダウンロードします。
+- メロディモードだけなら GPU は不要です。素材解析・マッチング・合成・動画はすべて CPU で動きます。
 - `uv add` / `uv remove` / `uv sync`（extra 指定なし）を実行すると lyrics extra がアンインストールされます。その後は `uv sync --extra lyrics` で入れ直してください。`uv run` だけなら消えません。
 
 ## クイックスタート
@@ -108,6 +109,7 @@ uv run --extra lyrics madgen auto --source sources/ --db work/corpus.sqlite \
 | `--source PATH` | — | 素材のファイルかフォルダ（複数指定可）。音声・動画の主な形式に対応 |
 | `--db FILE` | — | 素材 DB（SQLite）。解析済みの音声は `DB名.cache/` に置かれる |
 | `--phonemes wav2vec2` | `none` | 歌詞モード用の音素解析も行う（lyrics extra が必要） |
+| `--device` | `auto` | 音素解析を動かす場所。`auto`（GPU があれば GPU）/ `cuda` / `cpu` |
 | `--workers N` | CPU コア数 − 2 | 音高解析の並列数 |
 | `--log FILE` | `DB名.log` | 進捗ログ |
 
@@ -192,8 +194,19 @@ tail -f work/iwashi/render.log   # render --out-dir work/iwashi
 | 処理 | 時間 |
 | --- | --- |
 | 音高解析 | 約5分 |
-| 音素解析 | 約12分（whisperX 約7分 ＋ アライメント 約4分） |
-| render（25パート、動画込み） | 約3分 |
+| 音素解析（GPU） | 約12分（whisperX 約7分 ＋ アライメント 約4分） |
+| render（25パート、動画込み） | 約5分 |
+
+音素解析を CPU で動かした場合の目安（60秒の素材での実測から換算）:
+
+| モデル | 60秒の素材 | 4時間44分の素材 |
+| --- | --- | --- |
+| GPU・large-v3 | 10秒 | 約12分 |
+| CPU・`--whisper-model small` | 49秒 | 約4時間 |
+| CPU・`--whisper-model medium` | 123秒 | 約10時間 |
+| CPU・large-v3 | 20分でも終わらず（空きメモリ5GBの環境） | 現実的でない |
+
+CPU で使う場合は `--whisper-model small` を指定してください。素材解析の結果は DB に残るので、重いのは最初の1回だけです。
 
 ## 構成
 

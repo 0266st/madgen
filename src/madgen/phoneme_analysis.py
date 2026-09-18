@@ -69,13 +69,17 @@ def _log(msg: str) -> None:
     progress.log(msg.strip())
 
 
-def transcribe(audio: np.ndarray, device: str, batch_size: int = 8) -> list[dict]:
+def transcribe(audio: np.ndarray, device: str, batch_size: int = 8,
+               model_name: str = WHISPER_MODEL) -> list[dict]:
+    import os
+
     import torch
     import whisperx
 
     compute_type = "float16" if device == "cuda" else "int8"
-    progress.stage("loading whisperX model")
-    model = whisperx.load_model(WHISPER_MODEL, device, compute_type=compute_type, language="ja")
+    progress.stage(f"loading whisperX model ({model_name}, {device})")
+    model = whisperx.load_model(model_name, device, compute_type=compute_type, language="ja",
+                                threads=(os.cpu_count() or 4) if device == "cpu" else 4)
     # The voice activity detection over the whole file runs first and reports nothing.
     progress.stage("whisperX: voice detection, then transcription (%)", 100)
     result = model.transcribe(audio, batch_size=batch_size, language="ja", print_progress=True,
@@ -146,13 +150,14 @@ def _g2p(text: str) -> list[str]:
     return out
 
 
-def analyze(audio: np.ndarray, device: str | None = None) -> list[PhonemeSegment]:
+def analyze(audio: np.ndarray, device: str | None = None,
+            model_name: str = WHISPER_MODEL) -> list[PhonemeSegment]:
     import torch
 
     warnings.filterwarnings("ignore", message="(?s).*torchcodec")
     device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-    _log(f"  transcribing with whisperX {WHISPER_MODEL} on {device}")
-    utterances = transcribe(audio, device)
+    _log(f"  transcribing with whisperX {model_name} on {device}")
+    utterances = transcribe(audio, device, model_name=model_name)
     _log(f"  {len(utterances)} utterances; aligning phonemes with {PHONEME_MODEL}")
     progress.stage("loading phoneme model")
     model = PhonemeModel(device)

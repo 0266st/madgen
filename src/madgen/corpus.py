@@ -142,11 +142,12 @@ def segment_frames(f0: np.ndarray, rms_db: np.ndarray, p: SegmentParams) -> list
 PHONEME_ANALYZERS = ("wav2vec2",)
 
 
-def _add_phoneme_segments(conn, digest: str, path: Path, wav16: Path, video_ref: str | None) -> None:
+def _add_phoneme_segments(conn, digest: str, path: Path, wav16: Path, video_ref: str | None,
+                          device: str = "auto", whisper_model: str = "large-v3") -> None:
     from .phoneme_analysis import analyze
 
     audio, _ = sf.read(str(wav16), dtype="float32")
-    segs = analyze(audio)
+    segs = analyze(audio, None if device == "auto" else device, whisper_model)
     progress.stage("writing phoneme segments to DB")
     conn.execute("DELETE FROM phoneme_candidates WHERE segment_id IN "
                  "(SELECT id FROM segments WHERE source_id = ? AND kind = 'phoneme')", (digest,))
@@ -169,7 +170,8 @@ def _add_phoneme_segments(conn, digest: str, path: Path, wav16: Path, video_ref:
 
 
 def build_corpus(sources: list[Path], db_path: Path, workers: int | None = None,
-                 params: SegmentParams | None = None, phonemes: str = "none") -> None:
+                 params: SegmentParams | None = None, phonemes: str = "none",
+                 device: str = "auto", whisper_model: str = "large-v3") -> None:
     if phonemes != "none" and phonemes not in PHONEME_ANALYZERS:
         raise SystemExit(f"unknown phoneme analyzer {phonemes!r}; choose from {PHONEME_ANALYZERS}")
     params = params or SegmentParams()
@@ -194,7 +196,8 @@ def build_corpus(sources: list[Path], db_path: Path, workers: int | None = None,
             wav16 = cache_dir / f"{digest}.16k.wav"
             progress.stage("decoding audio (16 kHz)")
             ffmpeg.extract_audio(path, wav16, ANALYSIS_SR)
-            _add_phoneme_segments(conn, digest, path, wav16, str(path.resolve()) if has_video else None)
+            _add_phoneme_segments(conn, digest, path, wav16,
+                                  str(path.resolve()) if has_video else None, device, whisper_model)
             wav16.unlink()
             continue
         # The same path with different content: drop the stale analysis.
@@ -238,6 +241,6 @@ def build_corpus(sources: list[Path], db_path: Path, workers: int | None = None,
         print(f"  {len(records)} segments, {usable_sec:.0f} s of usable voiced sound", file=sys.stderr)
         progress.log(f"{path}: {len(records)} pitch segments")
         if phonemes != "none":
-            _add_phoneme_segments(conn, digest, path, wav16, video_ref)
+            _add_phoneme_segments(conn, digest, path, wav16, video_ref, device, whisper_model)
         wav16.unlink()
     conn.close()
