@@ -268,7 +268,7 @@ def test_gains_balance_and_groups(tmp_path):
         return {k: active_loudness_db(sf.read(out_dir / f"{k}.wav")[0]) for k in ("vocals", "accompaniment")}, out_dir
 
     levels, out_dir = run("auto")
-    assert levels["vocals"] - levels["accompaniment"] == pytest.approx(6.0, abs=0.3)
+    assert levels["vocals"] - levels["accompaniment"] == pytest.approx(2.0, abs=0.3)
     mix, _ = sf.read(out_dir / "mix.wav")
     both = sf.read(out_dir / "vocals.wav")[0] + sf.read(out_dir / "accompaniment.wav")[0]
     assert np.max(np.abs(both - mix)) < 1e-3     # the groups add up to the mix

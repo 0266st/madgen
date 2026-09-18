@@ -6,10 +6,13 @@ renderer leaves it silent (the previous note is never stretched into it).
 
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import mido
+
+PERCUSSION_CHANNEL = 9
 
 
 @dataclass
@@ -33,6 +36,12 @@ class Voice:
     units: list[TargetUnit] = field(default_factory=list)
     origin: str = "midi"   # "midi" (melody mode) or "ust" (lyrics mode)
     gain: float = 1.0      # track volume (USTX)
+    channel: int | None = None   # MIDI channel the notes came from
+
+    @property
+    def percussion(self) -> bool:
+        """GM channel 10 (0-based 9) is the drum kit: pitches are instruments, not notes."""
+        return self.channel == PERCUSSION_CHANNEL
 
     @property
     def lyrics(self) -> bool:
@@ -124,12 +133,14 @@ def load_midi(path: Path, tracks: str | None = None) -> list[Voice]:
         tick = 0
         open_notes: dict[tuple[int, int], tuple[int, int]] = {}
         notes: list[tuple[float, float, int, int]] = []
+        channels: Counter[int] = Counter()
         for msg in track:
             tick += msg.time
             if msg.type == "track_name" and not name.strip("_ "):
                 # Some DAWs write a placeholder name ("__") first and the real one later.
                 name = _decode_name(msg)
             elif msg.type == "note_on" and msg.velocity > 0:
+                channels[msg.channel] += 1
                 key = (msg.channel, msg.note)
                 if key in open_notes:  # retrigger without note_off: close the old one
                     s, v = open_notes.pop(key)
@@ -144,8 +155,9 @@ def load_midi(path: Path, tracks: str | None = None) -> list[Voice]:
             continue
         if wanted is not None and str(ti) not in wanted and name not in wanted:
             continue
+        channel = channels.most_common(1)[0][0] if channels else None
         for vi, vnotes in enumerate(split_voices([n for n in notes if n[1] > n[0]])):
-            voice = Voice(ti, name or f"track{ti}", vi)
+            voice = Voice(ti, name or f"track{ti}", vi, channel=channel)
             for i, (s, e, note, vel) in enumerate(vnotes):
                 voice.units.append(TargetUnit(i, s, e - s, midi_to_hz(note), vel, note_index=i))
             voices.append(voice)

@@ -27,6 +27,23 @@ def _add_render_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--video", action="store_true", help="with --out-dir: also render videos")
     p.add_argument("--split-parts", action="store_true",
                    help="with --out-dir: also write each MIDI track as parts/NN_<track>.wav (.mp4 with --video)")
+    p.add_argument("--video-layout", choices=["layered", "fullscreen"], default="layered",
+                   help="layered: background (drums) full screen, other parts as small panels, the sung part "
+                        "centred; fullscreen: one part at a time, full screen (default: layered)")
+    p.add_argument("--panel-layout", choices=["fixed", "auto", "random"], default="fixed",
+                   help="panels: fixed = 6 slots shared by the parts, auto = one slot per part, "
+                        "random = a random slot per note (default: fixed)")
+    p.add_argument("--panel-seed", type=int, default=0, help="seed for --panel-layout random")
+    p.add_argument("--lead-scale", type=float, default=0.55,
+                   help="width of the centred lead panel, as a share of the canvas (default 0.55)")
+    p.add_argument("--layer", action="append", metavar="TRACK=ROLE",
+                   help="put a track on a layer (repeatable): TRACK=background|panel|lead; "
+                        "e.g. --layer Bass=background --layer ust0=lead")
+    p.add_argument("--chroma-key", default="auto", metavar="COLOR",
+                   help="colour used for 'nothing here' (a part's rests, padding, empty canvas), so the videos "
+                        "can be keyed in a video editor: auto (default; the colour least present in the source), "
+                        "off (black), or one of "
+                        + ", ".join(sorted(__import__('madgen.video', fromlist=['KEY_COLORS']).KEY_COLORS)))
     p.add_argument("--video-track", default=None,
                    help="track the mix video prefers: a track name, a MIDI track index, or ustN for a UST track "
                         "(default: the longest-sounding UST track, else a MIDI track named *main*, else the "
@@ -43,9 +60,9 @@ def _add_render_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--no-lyrics-stretch", action="store_true",
                    help="lyrics mode: use the vowel material as it is (up to the note length, the rest silent) "
                         "instead of fitting its voiced core to exactly the note length")
-    p.add_argument("--vocal-boost", type=float, default=6.0, metavar="DB",
+    p.add_argument("--vocal-boost", type=float, default=2.0, metavar="DB",
                    help="with both --ust and --melody: level the sung tracks this many dB above the "
-                        "accompaniment, by measured loudness (default 6)")
+                        "accompaniment, by measured loudness (default 2)")
     p.add_argument("--no-auto-balance", dest="vocal_boost", action="store_const", const=None,
                    help="do not balance vocals against the accompaniment automatically")
     p.add_argument("--ust-gain", type=float, default=0.0, metavar="DB", help="gain for all UST tracks (dB)")

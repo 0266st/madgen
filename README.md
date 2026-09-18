@@ -79,14 +79,20 @@ uv run --extra lyrics madgen auto --source sources/ --db work/corpus.sqlite \
 | `--out-dir DIR` | — | フォルダに出力（`--out` とどちらか一方） |
 | `--video` | オフ | `--out-dir` のとき動画も出力 |
 | `--split-parts` | オフ | `--out-dir` のとき、トラックごとのパートも出力 |
-| `--video-track` | 最長の UST トラック → 名前に "main" を含む MIDI トラック → 最長の MIDI トラック | mix 動画で優先するトラック（名前、MIDI の番号、UST は `ust0` のように指定） |
+| `--video-layout` | `layered` | `layered` = レイヤー合成、`fullscreen` = 1パートずつ全画面 |
+| `--panel-layout` | `fixed` | `fixed` = 6枠を分け合う、`auto` = パートごとに1枠、`random` = ノートごとにランダムな枠 |
+| `--panel-seed` | 0 | `--panel-layout random` の乱数の種 |
+| `--lead-scale` | 0.55 | 中央のリード画面の幅（画面全体に対する割合） |
+| `--layer TRACK=ROLE` | 自動 | トラックをレイヤーに割り当てる（複数指定可）。ROLE は `background` / `panel` / `lead` |
+| `--chroma-key` | `auto` | 何も映っていない部分の色。`auto` = 素材に最も含まれない色を自動選択、`off` = 黒、または `magenta` / `green` / `blue` / `cyan` |
+| `--video-track` | 最長の UST トラック → 名前に "main" を含む MIDI トラック → 最長の MIDI トラック | `fullscreen` のとき優先するトラック（名前、MIDI の番号、UST は `ust0` のように指定） |
 | `--pitch-threshold CENTS` | 25 | メロディモード: 素材の音高がこれ以上ずれている音符だけピッチ補正する。0 = すべて補正 |
 | `--pitch-flatten` | 0.6 | メロディモード: 補正する音符で、0 = 素材の抑揚をそのまま残す、1 = ノートの音高で平坦にする |
 | `--lyrics-pitch-threshold CENTS` | 0 | 歌詞モードの母音・「ん」について同上（既定はすべて補正） |
 | `--lyrics-pitch-flatten` | 1.0 | 歌詞モードの母音・「ん」について同上（既定はノートの音高で平坦） |
 | `--no-pitch-correct` | オフ | どちらのモードでもピッチ補正を一切しない（マッチングで音高が合う素材を強く優先） |
 | `--no-lyrics-stretch` | オフ | 歌詞モードで、母音の芯を取り出してノートの長さに合わせる処理をせず、素材をそのまま使う（ノートより短ければ残りは無音） |
-| `--vocal-boost DB` | 6 | `--ust` と `--melody` の併用時、歌トラック全体を伴奏よりこの dB だけ大きくそろえる |
+| `--vocal-boost DB` | 2 | `--ust` と `--melody` の併用時、歌トラック全体を伴奏よりこの dB だけ大きくそろえる |
 | `--no-auto-balance` | オフ | 上の自動調整をしない |
 | `--ust-gain DB` / `--melody-gain DB` | 0 | UST（歌）全体 / MIDI（伴奏）全体の音量 |
 | `--gain TRACK=DB` | — | トラックごとの音量（複数指定可）。トラック名、MIDI の番号、UST は `ust0` |
@@ -137,6 +143,24 @@ uv run --extra lyrics madgen auto --source sources/ --db work/corpus.sqlite \
 参考（iwashi のリード、0.15秒以上の母音467個）: ノートの長さに対してしっかり鳴っている割合は平均91%（90%以上鳴っている母音が84%）、音程の誤差は中央値1セント、100%が50セント以内です。
 
 **音素解析**（`build-corpus --phonemes wav2vec2`）: whisperX large-v3 で書き起こし → pyopenjtalk で音素に変換 → wav2vec2 の音素認識モデル（`facebook/wav2vec2-xlsr-53-espeak-cv-ft`）の posteriorgram に強制アライメントして区切ります。各区間の候補は、その区間で事後確率の総量が大きい上位3音素です（確信度は正規化した値）。アライメントの確率が低すぎる発話（音楽やノイズに対する whisper の誤認識が多い）は、まるごと除外します。
+
+## 動画のレイヤー合成
+
+既定では、パートを重ねて1枚の映像にします（`--video-layout fullscreen` で以前の全画面切り替えに戻せます）。
+
+| レイヤー | 内容 | 既定の選び方 |
+| --- | --- | --- |
+| 背景（全画面） | ずっと鳴っているパート | 打楽器トラック（GM のチャンネル10で判定）。無ければ鳴っている時間が最長のトラック |
+| パネル（小さい画面） | その他の伴奏パート | 上下の帯に配置。`--panel-layout` で枠の決め方を変更 |
+| リード（中央） | 歌のパート | UST のトラック。UST が無ければ、名前に "main" を含むか最長の MIDI トラック |
+
+`--layer Bass=background --layer ust0=lead` のように手動で指定できます。1トラックしかない動画（`parts/` の各パート）は、並べる相手がいないので常に全画面です。
+
+**クロマキー**: 何も映っていない部分（パートの休符、縦横比が合わないときの余白、空きの画面）は、黒ではなくキー色で塗ります。他の編集ソフトでそのまま合成素材として使えます。キー色は既定で、素材の映像を16フレーム調べて最も含まれていない色を自動で選びます（`--chroma-key` で固定も可能）。レイヤー合成も、このキー色を抜いて重ねています。
+
+ただし **`mix` だけは背景を黒**にします（完成品にキー色が残ると不自然なため）。`vocals` / `accompaniment` / `parts/` はキー色のままなので、他のツールでそのまま重ねられます。
+
+同じ素材の同じ位置が続けて選ばれたときは、毎回頭から出し直さず、そのまま再生を続けます（打楽器のように同じ素材が繰り返し選ばれるパートが、止まって見えるのを防ぐため）。
 
 ## 音量調節
 
