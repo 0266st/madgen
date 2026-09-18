@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.1.0
       - name: Check that the tag matches the version in pyproject.toml
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
@@ -27,7 +27,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.1.0
         with:
           python-version: "3.12"
       # Only the base dependencies: the lyrics extra (torch, whisperX) would add several GB, and
