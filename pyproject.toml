@@ -8,15 +8,31 @@ authors = [
     { name = "0266st", email = "main@ztssst.dev" }
 ]
 requires-python = ">=3.12"
+keywords = ["otomad", "音MAD", "unit-selection", "midi", "ust", "ustx", "audio", "video"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: Japanese",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Sound Synthesis",
+    "Topic :: Multimedia :: Video :: Conversion",
+]
 dependencies = [
     "imageio-ffmpeg>=0.6.0",
     "mido>=1.3.3",
     "numpy>=2.5.3",
-    "pyworld>=0.3.5",
+    "pyworld==0.3.5",
     "pyyaml>=6.0.3",
     "setuptools<81",
     "soundfile>=0.14.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/0266st/madgen"
+Repository = "https://github.com/0266st/madgen"
+Issues = "https://github.com/0266st/madgen/issues"
 
 [project.scripts]
 madgen = "madgen:main"
