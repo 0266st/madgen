@@ -19,6 +19,8 @@ def run(args: list[str]) -> None:
         [ffmpeg_exe(), "-hide_banner", "-loglevel", "error", "-nostdin", "-y", *args],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     if proc.returncode != 0:
         raise RuntimeError(f"ffmpeg failed (exit {proc.returncode}): {' '.join(args)}\n"
@@ -35,6 +37,8 @@ def probe(path: Path) -> dict:
         [ffmpeg_exe(), "-hide_banner", "-nostdin", "-i", str(path)],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     text = proc.stderr
     duration = 0.0
