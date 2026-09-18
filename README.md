@@ -9,7 +9,24 @@ target と source（音声/動画、複数可）を渡すと、source の断片�
 | メロディモード | `--melody` の MIDI | 音高の近さ（音素は気にしない） |
 | 歌詞モード | `--ust` の UST / USTX | 音素の一致を最優先し、次にピッチと長さ、最後に接続の自然さ（辞書式）。自然さより、UST の音程と長さを忠実に再現することを優先 |
 
-## セットアップ
+## インストール
+
+```sh
+# 道具として入れる（uv が Python も用意します）
+uv tool install madgen
+
+# 歌詞モードの素材解析まで使う場合（GPU 推奨）
+uv tool install "madgen[lyrics]"
+```
+
+pip でも入ります（Python 3.12 以上）:
+
+```sh
+pip install madgen
+pip install "madgen[lyrics]"
+```
+
+リポジトリを直接使う場合:
 
 ```sh
 uv sync                  # メロディモードだけならこれで十分
@@ -21,6 +38,8 @@ uv sync --extra lyrics   # 歌詞モードの素材解析（whisperX, torch, pyo
 - `uv add` / `uv remove` / `uv sync`（extra 指定なし）を実行すると lyrics extra がアンインストールされます。その後は `uv sync --extra lyrics` で入れ直してください。`uv run` だけなら消えません。
 
 ## クイックスタート
+
+`uv tool install` で入れた場合は `madgen ...`、リポジトリ内では `uv run madgen ...` で実行します。
 
 ```sh
 # 1. 素材を解析して DB に追加（解析済みのファイルはスキップ）
