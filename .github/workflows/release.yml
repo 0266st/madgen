@@ -33,10 +33,15 @@ jobs:
       # Only the base dependencies: the lyrics extra (torch, whisperX) would add several GB, and
       # needs a GPU to be useful. Those users install from PyPI instead.
       - name: Install
-        run: uv pip install --system . pyinstaller
+        shell: bash
+        run: |
+          uv venv
+          uv pip install . pyinstaller
       - name: Build
+        shell: bash
         run: >
-          pyinstaller --noconfirm --clean --name madgen
+          $(ls -d .venv/Scripts .venv/bin 2>/dev/null | head -1)/pyinstaller
+          --noconfirm --clean --name madgen
           --collect-binaries imageio_ffmpeg --collect-binaries soundfile
           --collect-submodules madgen
           --exclude-module torch --exclude-module transformers
@@ -75,10 +80,12 @@ jobs:
           python-version: "3.12"
       # Only the base dependencies, as for Windows: the lyrics extra needs a GPU to be useful.
       - name: Install
-        run: uv pip install --system . pyinstaller
+        run: |
+          uv venv
+          uv pip install . pyinstaller
       - name: Build
         run: >
-          pyinstaller --noconfirm --clean --name madgen
+          .venv/bin/pyinstaller --noconfirm --clean --name madgen
           --collect-binaries imageio_ffmpeg --collect-binaries soundfile
           --collect-submodules madgen
           --exclude-module torch --exclude-module transformers
