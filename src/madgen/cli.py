@@ -89,6 +89,12 @@ def build_parser() -> argparse.ArgumentParser:
     b.add_argument("--phonemes", choices=["none", "wav2vec2"], default="none",
                    help="also run the phoneme analysis lyrics mode needs (whisperX + wav2vec2 phoneme CTC; "
                         "GPU recommended, install with `uv sync --extra lyrics`)")
+    b.add_argument("--whisper-model", default="large-v3",
+                   help="whisper model for the transcription (default large-v3). On CPU a smaller model "
+                        "such as small or medium is far faster")
+    b.add_argument("--device", choices=["auto", "cuda", "cpu"], default="auto",
+                   help="where the phoneme analysis runs (default: cuda when available). CPU works but is "
+                        "much slower")
     b.add_argument("--workers", type=int, default=None)
     b.add_argument("--log", type=Path, default=None, help="live progress log (default: <db>.log)")
 
@@ -137,7 +143,9 @@ def _run(args: argparse.Namespace) -> None:
         from .corpus import build_corpus
         # `auto` with a UST needs phonemes, so it asks for them itself.
         phonemes = getattr(args, "phonemes", None) or ("wav2vec2" if getattr(args, "ust", None) else "none")
-        build_corpus(args.source, args.db, workers=args.workers, phonemes=phonemes)
+        build_corpus(args.source, args.db, workers=args.workers, phonemes=phonemes,
+                     device=getattr(args, "device", "auto"),
+                     whisper_model=getattr(args, "whisper_model", "large-v3"))
     if args.command in ("render", "auto"):
         from .render import render
         render(args)
