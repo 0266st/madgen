@@ -47,6 +47,7 @@ GitHub Actions（`.github/workflows/ci.yml`）で、push（main）と pull reque
    | 2 | sdist と wheel、Windows 版 zip、Linux 版 tar.gz をビルド |
    | 3 | GitHub Release を作成し、バイナリを添付（説明文はコミットから自動生成） |
    | 4 | PyPI に公開（Trusted Publishing。API トークンは保存していません） |
+   | 5 | Release の説明文を `CHANGELOG.md` の先頭に追記して main に push |
 
 ### プレリリース
 

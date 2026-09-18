@@ -149,6 +149,40 @@ jobs:
             || gh release upload "$GITHUB_REF_NAME" madgen-*-windows-x64.zip madgen-*-linux-x64.tar.gz \
               --repo "$GITHUB_REPOSITORY" --clobber
 
+  changelog:
+    needs: github-release
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # The tag itself does not carry the entry: the notes are written from the commits that the
+      # tag points at, so CHANGELOG.md is updated on main right afterwards.
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - name: Write the release notes into CHANGELOG.md
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes=$(gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --json body --jq .body)
+          date=$(date -u +%Y-%m-%d)
+          {
+            echo "# 変更履歴"
+            echo
+            echo "## [$GITHUB_REF_NAME](https://github.com/$GITHUB_REPOSITORY/releases/tag/$GITHUB_REF_NAME) ($date)"
+            echo
+            echo "$notes"
+            if [ -f CHANGELOG.md ]; then
+              echo
+              tail -n +2 CHANGELOG.md
+            fi
+          } > CHANGELOG.new
+          mv CHANGELOG.new CHANGELOG.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git diff --quiet CHANGELOG.md || { git commit -m "docs: $GITHUB_REF_NAME の変更履歴" CHANGELOG.md && git push; }
+
   pypi:
     needs: build
     if: startsWith(github.ref, 'refs/tags/v')
