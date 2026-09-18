@@ -5,16 +5,24 @@ body:
   - type: textarea
     id: what
     attributes:
-      label: 何が起きたか
-      description: 期待した動作と、実際の動作を書いてください。
+      label: 不具合の内容
+      description: 何が起きたのかを書いてください。実行したコマンドも書いてください。
     validations:
       required: true
 
   - type: textarea
-    id: command
+    id: log
     attributes:
-      label: 実行したコマンド
+      label: ログ
+      description: "画面に出たエラーと、進捗ログ（`--out-dir` 内の `render.log`、または `DB名.log`）の該当部分を貼ってください。"
       render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する動作
     validations:
       required: true
 
@@ -27,6 +35,14 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: Windows 11 / Ubuntu 24.04
+    validations:
+      required: true
+
   - type: dropdown
     id: install
     attributes:
@@ -35,14 +51,6 @@ body:
         - PyPI（uv tool install / pip install）
         - 配布物（Windows 版 zip / Linux 版 tar.gz）
         - リポジトリから直接（uv sync）
-    validations:
-      required: true
-
-  - type: input
-    id: os
-    attributes:
-      label: OS
-      placeholder: Windows 11 / Ubuntu 24.04 / macOS 15
     validations:
       required: true
 
@@ -61,14 +69,7 @@ body:
       required: true
 
   - type: textarea
-    id: log
+    id: other
     attributes:
-      label: ログ
-      description: "進捗ログ（`--out-dir` 内の `render.log`、または `DB名.log`）の該当部分と、画面に出たエラーを貼ってください。"
-      render: shell
-
-  - type: textarea
-    id: material
-    attributes:
-      label: 素材と target について
-      description: 差し支えない範囲で、素材の形式（動画/音声、長さ）や target（MIDI / UST）の特徴を書いてください。ファイル自体は不要です。
+      label: その他
+      description: 素材や target の特徴など、補足があれば書いてください。
