@@ -128,6 +128,7 @@ def load_midi(path: Path, tracks: str | None = None) -> list[Voice]:
     wanted = None if tracks is None else {t.strip() for t in tracks.split(",") if t.strip()}
 
     voices: list[Voice] = []
+    available: list[str] = []
     for ti, track in enumerate(mid.tracks):
         name = ""
         tick = 0
@@ -153,15 +154,27 @@ def load_midi(path: Path, tracks: str | None = None) -> list[Voice]:
                     notes.append((convert(s), convert(tick), msg.note, v))
         if not notes:
             continue
+        channel = channels.most_common(1)[0][0] if channels else None
+        kind = "打楽器" if channel == PERCUSSION_CHANNEL else "楽器"
+        available.append(f"{ti}:{name or f'track{ti}'}（{len(notes)}音, {kind}）")
         if wanted is not None and str(ti) not in wanted and name not in wanted:
             continue
-        channel = channels.most_common(1)[0][0] if channels else None
         for vi, vnotes in enumerate(split_voices([n for n in notes if n[1] > n[0]])):
             voice = Voice(ti, name or f"track{ti}", vi, channel=channel)
             for i, (s, e, note, vel) in enumerate(vnotes):
                 voice.units.append(TargetUnit(i, s, e - s, midi_to_hz(note), vel, note_index=i))
             voices.append(voice)
     if not voices:
-        raise SystemExit(f"no notes found in {path} (tracks={tracks})")
+        raise SystemExit(no_tracks_message(path, tracks, available, "--tracks"))
     return voices
+
+
+def no_tracks_message(path: Path, wanted: str | None, available: list[str], option: str) -> str:
+    if not available:
+        return f"{path} にノートがありません"
+    listing = "\n".join(f"  {name}" for name in available)
+    if wanted is None:
+        return f"{path} に使えるトラックがありません:\n{listing}"
+    return (f"{path} に {option} {wanted!r} に当てはまるトラックがありません。"
+            f"\n名前か番号で指定してください:\n{listing}")
 

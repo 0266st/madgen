@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+### 追加
+
+- 打楽器トラック（GM のチャンネル10）を、音素の素材から作るようにした（[#13]）。楽器ごとに音素を割り当て、同じ楽器には同じ音、別の楽器には別の音を使う。`--percussion pitched` で以前の動作に戻せる。
+- トラックごとのフィルタ・EQ を追加した（[#14]）。`--filter Bass=lp:800` のように指定する。
+
+### 変更
+
+- 打楽器の音量が上がった（[#13]）。従来は他の伴奏より10dB ほど小さかったが、同程度になった。
+- `--tracks` / `--ust-tracks` に当てはまるトラックが無いとき、そのファイルに入っているトラックの一覧（名前、音数、打楽器かどうか）を表示するようにした。別の曲のトラック名を指定してしまったときに、何を指定すればよいかが分かる。
+
 ## [0.2.0] - 2026-09-18
 
 ### 追加
@@ -37,6 +47,8 @@
 [Unreleased]: https://github.com/0266st/madgen/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/0266st/madgen/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/0266st/madgen/releases/tag/v0.1.0
+[#13]: https://github.com/0266st/madgen/issues/13
+[#14]: https://github.com/0266st/madgen/issues/14
 [#1]: https://github.com/0266st/madgen/pull/1
 [#2]: https://github.com/0266st/madgen/pull/2
 [#4]: https://github.com/0266st/madgen/pull/4

@@ -6,6 +6,7 @@ it produces the same symbols pyopenjtalk.g2p() does for kana.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from functools import cache
 
 VOWELS = ("a", "i", "u", "e", "o")
@@ -173,3 +174,62 @@ def kana_to_morae(text: str) -> tuple[list[list[str]], list[str]]:
                 unknown.append(s[i])
             i += 1
     return morae, unknown
+
+
+# --- percussion -------------------------------------------------------------------------------
+#
+# A drum track's note numbers name instruments, not pitches (General MIDI channel 10), so the
+# usual pitch matching is meaningless there. Instead each instrument borrows a phoneme that sounds
+# like it: the unvoiced consonants of speech are short bursts of noise, which is what a hi-hat or a
+# snare is, and the voiced plosives are the low thumps a kick needs.
+
+@dataclass(frozen=True)
+class Drum:
+    name: str
+    phonemes: tuple[str, ...]   # preferred material, best first
+    max_sec: float              # hits are cut to this, however long the note is
+    level_db: float = 0.0       # relative to the other parts
+    voiced: bool | None = None  # True: needs a pitched (low) sound, False: wants noise
+
+
+_HAT = Drum("ハイハット", ("ts", "ch", "t", "k", "s"), 0.08, -2.0, voiced=False)
+_SNARE = Drum("スネア", ("sh", "s", "ts", "ch"), 0.15, 0.0, voiced=False)
+_KICK = Drum("キック", ("b", "d", "g", "m"), 0.20, 1.0, voiced=True)
+_TOM = Drum("タム", ("d", "b", "g"), 0.20, 0.0, voiced=True)
+_CYMBAL = Drum("シンバル", ("sh", "s"), 0.60, -3.0, voiced=False)
+def _perc(name: str, phonemes: tuple[str, ...] = ("t", "k", "d", "ts"), max_sec: float = 0.15) -> Drum:
+    return Drum(name, phonemes, max_sec, -1.0)
+
+
+_PERC = _perc("パーカッション")
+_SHAKER = Drum("シェイカー", ("sh", "s", "ts"), 0.10, -4.0, voiced=False)
+
+# General MIDI percussion key map (the entries a typical track actually uses).
+DRUMS: dict[int, Drum] = {
+    35: _KICK, 36: _KICK,
+    37: Drum("リムショット", ("t", "k", "p"), 0.08, -2.0, voiced=False),
+    38: _SNARE, 40: _SNARE,
+    39: Drum("クラップ", ("p", "t", "k"), 0.12, 0.0, voiced=False),
+    41: _TOM, 43: _TOM, 45: _TOM, 47: _TOM, 48: _TOM, 50: _TOM,
+    42: _HAT, 44: _HAT,
+    46: Drum("オープンハイハット", ("sh", "s", "ts"), 0.20, -2.0, voiced=False),
+    49: _CYMBAL, 52: _CYMBAL, 55: _CYMBAL, 57: _CYMBAL,
+    51: Drum("ライド", ("ch", "ts", "k"), 0.20, -3.0, voiced=False),
+    53: Drum("ライドベル", ("ch", "ts"), 0.15, -3.0, voiced=False),
+    59: Drum("ライド", ("ch", "ts", "k"), 0.20, -3.0, voiced=False),
+    54: Drum("タンバリン", ("ts", "ch", "sh"), 0.12, -3.0, voiced=False),
+    56: Drum("カウベル", ("k", "t"), 0.12, -2.0),
+    # Each of these is its own instrument, and a kit that plays them all with one sound loses the
+    # pattern they make together; the high/low pair of an instrument shares a sound on purpose.
+    60: _perc("ハイボンゴ"), 61: _perc("ローボンゴ"),
+    62: _perc("ハイコンガ"), 63: _perc("ハイコンガ"), 64: _perc("ローコンガ"),
+    65: _perc("ハイティンバレ"), 66: _perc("ローティンバレ"),
+    67: _perc("ハイアゴゴ", ("k", "t", "ts")), 68: _perc("ローアゴゴ", ("k", "t", "ts")),
+    69: _SHAKER, 70: _SHAKER, 82: _SHAKER,
+    75: Drum("クラベス", ("k", "t"), 0.08, -2.0, voiced=False),
+}
+DEFAULT_DRUM = _PERC
+
+
+def drum_for(note: int) -> Drum:
+    return DRUMS.get(note, DEFAULT_DRUM)

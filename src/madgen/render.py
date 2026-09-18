@@ -20,9 +20,9 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
-from . import db, ffmpeg
-from .match import CostWeights, LyricsWeights, select_units, select_units_lyrics
-from .phonemes import is_voiced_sustained
+from . import db, ffmpeg, filters
+from .match import CostWeights, LyricsWeights, select_units, select_units_lyrics, select_units_percussion
+from .phonemes import drum_for, is_voiced_sustained
 from .progress import progress
 from .synth import SR, TARGET_RMS_DB, NoteJob, normalize_gain, render_voice, sum_tracks
 from .target import Voice, load_midi
@@ -259,6 +259,20 @@ def _key_color(args: argparse.Namespace, voices: list[RenderedVoice]) -> str:
     return name
 
 
+def _apply_filters(rendered: list[RenderedVoice], specs: list[str] | None) -> None:
+    """--filter TRACK=SPEC, applied to each track after the gains and before the mix."""
+    for spec in specs or []:
+        name, sep, chain = spec.partition("=")
+        if not sep or not name or not chain:
+            raise SystemExit(f"--filter expects TRACK=SPEC (e.g. --filter Bass=lp:800), got {spec!r}")
+        parsed = filters.parse(chain)
+        hit = [r for r in rendered if name == "all" or _track_matches(r.voice, name)]
+        if not hit:
+            raise SystemExit(f"--filter: track {name!r} not found; tracks: {_track_names(r.voice for r in rendered)}")
+        for r in hit:
+            r.audio = filters.apply(r.audio, parsed, SR)
+
+
 def _resolve_outputs(args: argparse.Namespace) -> tuple[Path, Path | None, Path | None]:
     """(mix wav, mix mp4 or None, parts dir or None)"""
     if (args.out is None) == (args.out_dir is None):
@@ -321,11 +335,20 @@ def render(args: argparse.Namespace) -> None:
     if args.ust is not None:
         from .ust import load_ust
         voices += load_ust(args.ust, args.ust_tracks)
+    drums = [v for v in voices if v.percussion] if args.percussion != "pitched" else []
     corpora = {}
     if any(not v.lyrics for v in voices):
         corpora["pitch"] = db.load_corpus(conn, "pitch")
-    if any(v.lyrics for v in voices):
-        corpora["phoneme"] = db.load_corpus(conn, "phoneme")
+    if any(v.lyrics for v in voices) or (drums and args.percussion == "samples"):
+        try:
+            corpora["phoneme"] = db.load_corpus(conn, "phoneme")
+        except SystemExit:
+            if any(v.lyrics for v in voices):
+                raise
+            # A drum track can only borrow phonemes if they have been analyzed; without them,
+            # fall back to what earlier versions did (note numbers treated as pitches).
+            print("  no phoneme corpus: percussion falls back to --percussion pitched", file=sys.stderr)
+            drums = []
     total_sec = max(u.start_sec + u.duration_sec for v in voices for u in v.units) + TAIL_SEC
     sizes = ", ".join(f"{len(c)} {kind} segments" for kind, c in corpora.items())
     print(f"[render] corpus {sizes}, {len(voices)} voices, {total_sec:.1f} s", file=sys.stderr)
@@ -334,17 +357,22 @@ def render(args: argparse.Namespace) -> None:
     rendered: list[RenderedVoice] = []
     plan = []
     corrected = 0
+    drum_samples: dict[str, int] = {}   # shared across the drum voices: one sound per instrument
     for voice in voices:
-        corpus = corpora["phoneme" if voice.lyrics else "pitch"]
+        sampled_drums = voice in drums and args.percussion == "samples"
+        corpus = corpora["phoneme" if voice.lyrics or sampled_drums else "pitch"]
         progress.stage(f"matching {voice.label} ({len(voice.units)} units)")
         if voice.lyrics:
             path = select_units_lyrics(voice.units, corpus, lyrics_weights)
+        elif sampled_drums:
+            path = select_units_percussion(voice.units, corpus, drum_samples)
         else:
             path = select_units(voice.units, corpus, weights)
         jobs, refs = [], []
         for unit, si in zip(voice.units, path, strict=True):
             sid = corpus.source_id[si]
             sustained = not voice.lyrics or is_voiced_sustained(unit.phoneme)
+            drum = drum_for(round(69 + 12 * np.log2(unit.target_f0_hz / 440.0))) if sampled_drums else None
             job = NoteJob(
                 audio_path=corpus.audio_cache[sid],
                 seg_start=float(corpus.start[si]),
@@ -352,12 +380,16 @@ def render(args: argparse.Namespace) -> None:
                 seg_f0=float(corpus.f0[si]),
                 target_f0=unit.target_f0_hz,
                 note_start=unit.start_sec,
-                note_dur=unit.duration_sec,
+                # A hit is as long as the instrument, not as long as the note.
+                note_dur=min(unit.duration_sec, drum.max_sec) if drum else unit.duration_sec,
                 velocity=unit.velocity,
                 flatten=args.lyrics_pitch_flatten if voice.lyrics else args.pitch_flatten,
                 # Consonants are left alone: their pitch is not what is heard.
-                threshold_cents=(lyrics_threshold if voice.lyrics else threshold) if sustained else None,
-                level_db=TARGET_RMS_DB if sustained else CONSONANT_LEVEL_DB,
+                # A drum hit keeps the material as it is: its pitch is not what is heard.
+                threshold_cents=None if drum else
+                ((lyrics_threshold if voice.lyrics else threshold) if sustained else None),
+                level_db=(TARGET_RMS_DB + drum.level_db) if drum else
+                (TARGET_RMS_DB if sustained else CONSONANT_LEVEL_DB),
                 measure_used_f0=voice.lyrics and sustained,
                 sustain_to_note=voice.lyrics and sustained and not args.no_lyrics_stretch,
             )
@@ -373,6 +405,8 @@ def render(args: argparse.Namespace) -> None:
                 "pitch_offset_cents": None,   # filled in after synthesis
                 "pitch_corrected": False,
             }
+            if drum:
+                entry["instrument"] = drum.name
             if voice.lyrics:
                 cands = [(str(p), round(float(c), 3))
                          for p, c in zip(corpus.cand_phoneme[si], corpus.cand_conf[si], strict=True) if p]
@@ -382,7 +416,12 @@ def render(args: argparse.Namespace) -> None:
         print(f"  synthesizing {voice.label} ({len(jobs)} {'phonemes' if voice.lyrics else 'notes'})",
               file=sys.stderr)
         progress.stage(f"synthesizing {voice.label}", len(jobs))
-        audio, synth_info = render_voice(jobs, total_sec, args.workers)
+        if voice in drums and args.percussion == "off":
+            # Silent, but the segments are still chosen so the video can follow the track.
+            audio = np.zeros(int(total_sec * SR) + 1, dtype=np.float32)
+            synth_info = [(job.seg_f0, False, 1.0) for job in jobs]
+        else:
+            audio, synth_info = render_voice(jobs, total_sec, args.workers)
         for entry, job, (ref_f0, is_corrected, ratio) in zip(plan[len(plan) - len(jobs):], jobs, synth_info,
                                                              strict=True):
             corrected += is_corrected
@@ -409,6 +448,7 @@ def render(args: argparse.Namespace) -> None:
 
     progress.stage("mixing and writing audio")
     _apply_gains(rendered, args)
+    _apply_filters(rendered, args.filter)
     mix = sum_tracks([r.audio for r in rendered])
     gain = normalize_gain(mix)
     mix_wav.parent.mkdir(parents=True, exist_ok=True)

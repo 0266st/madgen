@@ -138,6 +138,8 @@ uv run --extra lyrics madgen auto --source sources/ --db work/corpus.sqlite \
 | `--no-auto-balance` | オフ | 上の自動調整をしない |
 | `--ust-gain DB` / `--melody-gain DB` | 0 | UST（歌）全体 / MIDI（伴奏）全体の音量 |
 | `--gain TRACK=DB` | — | トラックごとの音量（複数指定可）。トラック名、MIDI の番号、UST は `ust0` |
+| `--filter TRACK=SPEC` | — | トラックごとのフィルタ・EQ（複数指定可）。`all=SPEC` で全トラック |
+| `--percussion` | `samples` | 打楽器トラックの作り方。`samples` / `pitched` / `off` |
 | `--plan FILE` | `--out-dir` では `plan.json` | 選択結果の JSON |
 | `--log FILE` | `--out-dir` 内の `render.log`（`--out` なら `出力ファイル名.log`） | 進捗ログ |
 | `--workers N` | CPU コア数 − 2 | 合成の並列数 |
@@ -204,6 +206,50 @@ uv run --extra lyrics madgen auto --source sources/ --db work/corpus.sqlite \
 ただし **`mix` だけは背景を黒**にします（完成品にキー色が残ると不自然なため）。`vocals` / `accompaniment` / `parts/` はキー色のままなので、他のツールでそのまま重ねられます。
 
 同じ素材の同じ位置が続けて選ばれたときは、毎回頭から出し直さず、そのまま再生を続けます（打楽器のように同じ素材が繰り返し選ばれるパートが、止まって見えるのを防ぐため）。
+
+## 打楽器
+
+MIDI の打楽器トラック（GM のチャンネル10）は、音符番号が音の高さではなく**楽器の種類**を表します。そのため既定では、楽器ごとに音素の素材を1つ割り当てて、サンプラーのように使います。
+
+| 楽器 | 使う音素 |
+| --- | --- |
+| キック・タム | `b` `d` `g`（低く短い破裂音） |
+| スネア・クラップ | `sh` `s`（ノイズ） |
+| ハイハット | `ts` `ch` `t` `k` |
+| シンバル | `sh` `s` |
+
+- 音の高さは見ません。ピッチ補正もしません。
+- 長さは楽器ごとの上限で切ります（クローズハイハットなら80ms、キックなら200ms）。
+- 同じ楽器は常に同じ音、別の楽器には別の音が割り当てられます。
+- **音素解析済みの素材が必要です**（`build-corpus --phonemes wav2vec2`）。無い場合は自動的に `pitched` に切り替わります。
+
+`--percussion` で切り替えられます。
+
+| 値 | 動作 |
+| --- | --- |
+| `samples`（既定） | 上記のとおり、音素の素材を楽器ごとに割り当てる |
+| `pitched` | 音符番号を音の高さとして扱う（以前の動作） |
+| `off` | 音を出さない（動画は引き続きそのトラックに追従する） |
+
+## フィルタ・EQ
+
+トラックごとに帯域を整理できます。指定しなければ何もしません。
+
+```sh
+uv run madgen render ... --filter Bass=lp:800 --filter Standard=hp:2000 --filter all=hp:30
+```
+
+| 書き方 | 内容 |
+| --- | --- |
+| `hp:80` | 80Hz より低い音を削る（12dB/oct。`hp:80:4` で 24dB/oct） |
+| `lp:8000` | 8kHz より高い音を削る |
+| `peak:3000:+4` | 3kHz を 4dB 持ち上げる（`peak:3000:+4:2` で幅を狭く） |
+| `lowshelf:200:-3` | 200Hz 以下をまとめて 3dB 下げる |
+| `highshelf:5000:+2` | 5kHz 以上をまとめて 2dB 上げる |
+
+`--filter Bass=lp:800,hp:40` のようにカンマで繋げられます。トラックの指定は `--gain` と同じです（トラック名、MIDI の番号、UST は `ust0`、全トラックは `all`）。
+
+処理は周波数領域で行うため位相のずれがなく、打楽器の立ち上がりが鈍りません。
 
 ## 音量調節
 

@@ -17,7 +17,7 @@ from pathlib import Path
 import yaml
 
 from .phonemes import CLOSURE, VOWELS, is_voiced_sustained, kana_to_morae
-from .target import TargetUnit, Voice, midi_to_hz, split_voices, tick_to_sec
+from .target import TargetUnit, Voice, midi_to_hz, no_tracks_message, split_voices, tick_to_sec
 
 CONSONANT_SEC = 0.06            # consonant length at the head of a note
 CONSONANT_MAX_RATIO = 0.4       # ...but never more than this share of a short note
@@ -145,6 +145,8 @@ def load_ust(path: Path, tracks: str | None = None) -> list[Voice]:
     wanted = None if tracks is None else {t.strip() for t in tracks.split(",") if t.strip()}
 
     voices: list[Voice] = []
+    available = [f"{tr.index}:{tr.name}（{len(tr.notes)}音{'、ミュート' if tr.muted else ''}）"
+                 for tr in tracks_all]
     for tr in tracks_all:
         if wanted is None and tr.muted:
             print(f"  ust track {tr.name} is muted, skipping", file=sys.stderr)
@@ -191,7 +193,7 @@ def load_ust(path: Path, tracks: str | None = None) -> list[Voice]:
             if voice.units:
                 voices.append(voice)
     if not voices:
-        raise SystemExit(f"no singable notes found in {path} (tracks={tracks})")
+        raise SystemExit(no_tracks_message(path, tracks, available, "--ust-tracks"))
     return voices
 
 
