@@ -18,41 +18,51 @@ GitHub Actions（`.github/workflows/ci.yml`）で、push（main）と pull reque
 
 ## コミットメッセージ
 
-[Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0/) に従ってください。これをもとに、リリース時のバージョンと変更履歴が自動で決まります。
-
-| 書き出し | 例 | バージョン（1.0.0 未満のあいだ） |
-| --- | --- | --- |
-| `feat:` | `feat: 動画のレイヤー合成を追加` | 0.1.1 → 0.2.0 |
-| `fix:` | `fix: 母音が伸びないのを直す` | 0.1.1 → 0.1.2 |
-| `feat!:` / `BREAKING CHANGE:` | `feat!: CLI のオプション名を変更` | 0.1.1 → 0.2.0 |
-| `chore:` / `test:` | `chore: 依存を更新` | 変わらない（変更履歴にも出ません） |
-
-本文には「なぜそうしたか」を書いてください。特に、試して駄目だった方法や、ハマった点が残っていると後で助かります。
+決まりはありませんが、「なぜそうしたか」を本文に書いてください。特に、試して駄目だった方法やハマった点が残っていると、後で読む人（と自分）が助かります。
 
 ## リリース
 
-バージョン番号と変更履歴は自動、リリースの引き金は手動（署名タグ）です。
+バージョンは自分で決めます。タグを押すと、そこから先は全部自動です。
 
-1. main に push されると、release-please が「リリース用の PR」を作ります（`pyproject.toml` のバージョンと `CHANGELOG.md` の更新）。コミットが溜まるほど、その PR の内容が更新されていきます。
-2. その PR をマージします。**この時点ではまだ何も公開されません。**
-3. 署名タグを押します。これが引き金です。
+1. バージョンを上げて main にマージします。
+
+   ```sh
+   uv version 0.3.0        # または 0.3.0a1 のようなプレリリース
+   uv lock                 # uv.lock にもバージョンが入っているため
+   ```
+
+2. 署名タグを押します。**これが引き金です。**
 
    ```sh
    git checkout main && git pull
-   git tag -s "v$(uv version --short)" -m "v$(uv version --short)"
-   git push origin "v$(uv version --short)"
+   git tag -s v0.3.0 -m "v0.3.0"
+   git push origin v0.3.0
    ```
 
-4. あとは自動で走ります。
-   - Windows 版 zip と Linux 版 tar.gz のビルド
-   - GitHub Release の作成（上のバイナリを添付）
-   - PyPI への公開（Trusted Publishing。API トークンは保存していません）
+3. あとは自動で走ります（5分ほど）。
 
-タグを CI に作らせると軽量タグになり署名が入らないため、この形にしています。GitHub で「Verified」と表示させるには、署名に使う SSH 鍵を Settings → SSH and GPG keys に **Signing key** として登録してください（認証用として登録済みでも、署名用に別途必要です）。
+   | 順番 | 内容 |
+   | --- | --- |
+   | 1 | タグと `pyproject.toml` のバージョンが一致するか確認（違えばここで停止） |
+   | 2 | sdist と wheel、Windows 版 zip、Linux 版 tar.gz をビルド |
+   | 3 | GitHub Release を作成し、バイナリを添付（説明文はコミットから自動生成） |
+   | 4 | PyPI に公開（Trusted Publishing。API トークンは保存していません） |
 
-PyPI に上がるファイルには、どのリポジトリのどのワークフローが作ったかを示す来歴証明（PEP 740 アテステーション）が自動で付きます。
+### プレリリース
 
-配布物には ffmpeg（GPLv3）を同梱するため、`THIRD_PARTY_LICENSES/` も一緒に入ります。詳細は [THIRD_PARTY_LICENSES/README.md](THIRD_PARTY_LICENSES/README.md) を参照してください。
+タグに `-` が入っていれば、GitHub では自動的にプレリリース扱いになります。PyPI でも、`pip install madgen` では入らず `--pre` を付けたときだけ入ります。
+
+| タグ | `pyproject.toml` の version |
+| --- | --- |
+| `v0.3.0-alpha.1` | `0.3.0a1` |
+| `v0.3.0-beta.2` | `0.3.0b2` |
+| `v0.3.0-rc.1` | `0.3.0rc1` |
+
+タグは SemVer 形式、`pyproject.toml` は Python の形式（PEP 440）で書き方が違いますが、**バージョンとして同じなら通る**ようにしてあります。
+
+### 公開後に間違いに気づいたら
+
+PyPI は同じバージョンを再公開できません。取り下げ（yank）はできますが、番号は使い回せないので、次の番号で出し直してください。GitHub Release とタグは消せます。
 
 ## 配布物のビルドを手元で確認する
 

@@ -1,6 +1,6 @@
 [project]
 name = "madgen"
-version = "0.1.1"
+version = "0.2.0"
 description = "音MAD auto generator: rebuilds a MIDI melody or a UST/USTX song from pieces of source audio/video"
 readme = "README.md"
 license = "MIT"
