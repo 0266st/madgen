@@ -26,6 +26,18 @@ pip install madgen
 pip install "madgen[lyrics]"
 ```
 
+### Windows 版（Python を入れずに使う）
+
+[Releases](https://github.com/0266st/madgen/releases) の `madgen-vX.Y.Z-windows-x64.zip` を展開し、中の `madgen.exe` をコマンドプロンプトや PowerShell から実行してください。
+
+```
+madgen.exe build-corpus --source sources\ --db work\corpus.sqlite
+madgen.exe render --db work\corpus.sqlite --melody target\target.mid --out-dir work\out --video
+```
+
+- **メロディモード専用**です。歌詞モード（音素解析）は含みません。歌詞モードを使う場合は、上の `uv tool install "madgen[lyrics]"` で入れてください（GPU 推奨）。
+- ffmpeg を同梱しているため、この zip には **GPLv3** が適用されます（madgen 自身のソースコードは MIT のままです）。詳細は zip 内の `THIRD_PARTY_LICENSES/` を参照してください。
+
 リポジトリを直接使う場合:
 
 ```sh
@@ -257,6 +269,8 @@ GitHub Actions（`.github/workflows/ci.yml`）で、push（main）と pull reque
 ## ライセンス
 
 [MIT License](LICENSE)（© 2026 0266st）
+
+- 配布用の Windows 版 zip には ffmpeg（GPLv3）を同梱しているため、**その zip の再配布には GPLv3 の条件**がかかります。同梱物の詳細とソースコードの入手先は [THIRD_PARTY_LICENSES/](THIRD_PARTY_LICENSES/) にまとめています。`pip` / `uv` で入れる場合は ffmpeg が利用者の環境に入るため、この条件はかかりません。
 
 - ライセンスが対象にするのは、このツールのコードだけです。素材（source の音声・動画）や target の楽曲・歌詞の権利は、それぞれの権利者に帰属します。生成物の公開や配布は、素材の権利を確認したうえで行ってください。
 - ffmpeg は、依存パッケージ imageio-ffmpeg に同梱されたバイナリ（GPLv3 でビルドされたもの）を別プロセスとして呼び出しています。このリポジトリには ffmpeg を含みません。

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 
@@ -79,8 +80,18 @@ def _add_render_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--plan", type=Path, default=None, help="write the chosen segments as JSON")
 
 
+def _version() -> str:
+    from importlib.metadata import PackageNotFoundError, version
+
+    try:
+        return version("madgen")
+    except PackageNotFoundError:  # running from a source tree without an install
+        return "unknown"
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="madgen", description="音MAD auto generator")
+    parser.add_argument("--version", action="version", version=f"madgen {_version()}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     b = sub.add_parser("build-corpus", help="analyze sources into the corpus DB (diff only)")
@@ -122,9 +133,20 @@ def _log_path(args: argparse.Namespace) -> Path:
     return args.db.with_name(args.db.name + ".log")
 
 
+def _use_utf8() -> None:
+    """Windows consoles still default to a local code page, and printing Japanese there raises
+    UnicodeEncodeError. Ask for UTF-8, and never let the encoding itself crash a run."""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
 def main(argv: list[str] | None = None) -> None:
     from .progress import progress
 
+    _use_utf8()
     args = build_parser().parse_args(argv)
     progress.open(_log_path(args))
     status = "failed"

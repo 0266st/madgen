@@ -3,6 +3,10 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .ruff_cache/
+# PyInstaller
+build/
+dist/
+*.spec
 # large inputs and generated outputs
 sources/
 target/
