@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import sys
@@ -19,16 +20,29 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
-from . import db
+from . import db, ffmpeg
 from .match import CostWeights, LyricsWeights, select_units, select_units_lyrics
 from .phonemes import is_voiced_sustained
 from .progress import progress
 from .synth import SR, TARGET_RMS_DB, NoteJob, normalize_gain, render_voice, sum_tracks
 from .target import Voice, load_midi
-from .video import VideoNote, build_spans, render_video
+from .video import (
+    Layer,
+    VideoNote,
+    build_spans,
+    lead_box,
+    panel_slots,
+    pick_key_color,
+    render_layered_video,
+    render_video,
+    split_spans_over_slots,
+)
 
 TAIL_SEC = 1.0
 FPS = 30
+WIDTH, HEIGHT = 1280, 720
+PANEL_SLOTS = 6        # "fixed" panel layout
+RANDOM_SLOTS = 9       # "random" panel layout
 CONSONANT_LEVEL_DB = TARGET_RMS_DB - 6.0
 
 
@@ -136,6 +150,113 @@ def _apply_gains(rendered: list[RenderedVoice], args: argparse.Namespace) -> Non
     for r, f in zip(rendered, factors, strict=True):
         if f != 0.0:
             r.audio = r.audio * np.float32(10 ** (f / 20))
+
+
+ROLES = ("background", "panel", "lead")
+
+
+def _roles(voices: list[RenderedVoice], overrides: list[str] | None) -> dict[tuple[str, int], str]:
+    """Which layer each track goes to: --layer wins, then the automatic rules."""
+    tracks = {r.track_key: r.voice for r in voices}
+    time = {key: sum(r.sounding_sec for r in voices if r.track_key == key) for key in tracks}
+    roles: dict[tuple[str, int], str] = {}
+    for spec in overrides or []:
+        name, sep, role = spec.rpartition("=")
+        if not sep or role not in ROLES:
+            raise SystemExit(f"--layer expects TRACK={'|'.join(ROLES)}, got {spec!r}")
+        hit = [key for key, v in tracks.items() if _track_matches(v, name)]
+        if not hit:
+            raise SystemExit(f"--layer: track {name!r} not found; tracks: {_track_names(tracks.values())}")
+        for key in hit:
+            roles[key] = role
+
+    free = [key for key in tracks if key not in roles]
+    if "lead" not in roles.values():
+        # The sung parts lead; with no lyrics, the melody track does.
+        sung = sorted([key for key in free if tracks[key].lyrics], key=lambda k: -time[k])
+        pool = sung or [key for key in free if not tracks[key].lyrics]
+        if pool:
+            named_main = [key for key in pool if "main" in tracks[key].track_name.lower()]
+            # Only the main sung line leads; harmonies become panels like the other parts.
+            roles[sung[0] if sung else (named_main[0] if named_main else max(pool, key=lambda k: time[k]))] = "lead"
+    free = [key for key in tracks if key not in roles]
+    if "background" not in roles.values():
+        # Drums (GM channel 10) keep sounding under everything; otherwise the longest-sounding track.
+        drums = [key for key in free if tracks[key].percussion]
+        if drums:
+            roles.update({key: "background" for key in drums})
+        elif free:
+            roles[max(free, key=lambda k: time[k])] = "background"
+    for key in tracks:
+        roles.setdefault(key, "panel")
+    return roles
+
+
+def _track_names(voices) -> list[str]:
+    return [f"{'ust' if v.lyrics else ''}{v.track_index}:{v.track_name}" for v in voices]
+
+
+def _layer_notes(voices: list[RenderedVoice], keys: list[tuple[str, int]]) -> list[list[VideoNote]]:
+    """Note lists of the tracks in `keys`, longest-sounding track first."""
+    members = [r for r in voices if r.track_key in keys]
+    members.sort(key=lambda r: (-sum(x.sounding_sec for x in voices if x.track_key == r.track_key),
+                                r.track_key, r.voice.voice_index))
+    return [r.video_notes for r in members]
+
+
+def build_layers(voices: list[RenderedVoice], total_sec: float, args: argparse.Namespace) -> list[Layer]:
+    """Background (full screen), panels (small, around), lead (centred) -- in drawing order."""
+    roles = _roles(voices, args.layer)
+    by_role: dict[str, list[tuple[str, int]]] = {role: [] for role in ROLES}
+    for key, role in roles.items():
+        by_role[role].append(key)
+    lead = lead_box(WIDTH, HEIGHT, args.lead_scale)
+    layers: list[Layer] = []
+
+    if by_role["background"]:
+        spans = build_spans(_layer_notes(voices, by_role["background"]), total_sec, FPS)
+        layers.append(Layer("background", spans, 0, 0, WIDTH, HEIGHT, transparent=False))
+
+    panels = sorted(by_role["panel"],
+                    key=lambda k: -sum(r.sounding_sec for r in voices if r.track_key == k))
+    if panels:
+        if args.panel_layout == "random":
+            spans = build_spans(_layer_notes(voices, panels), total_sec, FPS)
+            slots = panel_slots(RANDOM_SLOTS, WIDTH, HEIGHT, lead)
+            for i, (part, slot) in enumerate(zip(split_spans_over_slots(spans, len(slots), args.panel_seed),
+                                                 slots, strict=True)):
+                layers.append(Layer(f"panel{i}", part, *slot))
+        else:
+            count = len(panels) if args.panel_layout == "auto" else min(PANEL_SLOTS, len(panels))
+            slots = panel_slots(count, WIDTH, HEIGHT, lead)
+            for i, slot in enumerate(slots):
+                # More parts than slots: the ones sharing a slot take turns, loudest-lasting first.
+                keys = panels[i::len(slots)]
+                spans = build_spans(_layer_notes(voices, keys), total_sec, FPS)
+                layers.append(Layer(f"panel{i}:{keys[0][1]}", spans, *slot))
+
+    if by_role["lead"]:
+        spans = build_spans(_layer_notes(voices, by_role["lead"]), total_sec, FPS)
+        layers.append(Layer("lead", spans, *lead))
+    return layers
+
+
+def _key_color(args: argparse.Namespace, voices: list[RenderedVoice]) -> str:
+    """The colour that stands for "nothing here": keyed out when layers are composed, and left in
+    the written videos so they can be keyed in a video editor too."""
+    if args.chroma_key == "off":
+        return "black"
+    if args.chroma_key != "auto":
+        return args.chroma_key
+    refs = [n.video_ref for r in voices for n in r.video_notes if n.video_ref]
+    if not refs:
+        return "magenta"
+    source = Path(max(set(refs), key=refs.count))
+    samples = ffmpeg.sample_frames(source, 16, max(1.0, ffmpeg.probe(source)["duration"]))
+    name = pick_key_color(samples)
+    print(f"  chroma key: {name} (from {len(samples)} frames of {source.name})", file=sys.stderr)
+    progress.log(f"chroma key: {name}")
+    return name
 
 
 def _resolve_outputs(args: argparse.Namespace) -> tuple[Path, Path | None, Path | None]:
@@ -321,30 +442,47 @@ def render(args: argparse.Namespace) -> None:
             sf.write(stem.with_suffix(".wav"), sum_tracks([r.audio for r in members]) * gain, SR, subtype="PCM_16")
             print(f"  wrote {stem.with_suffix('.wav')}", file=sys.stderr)
 
-    videos: list[tuple[list[RenderedVoice], Path, Path]] = []
+    # (voices, audio, output, background colour override): the mix gets a black background so the
+    # finished video has no key colour in it; the parts keep the key colour to stay reusable.
+    videos: list[tuple[list[RenderedVoice], Path, Path, str | None]] = []
     if mix_mp4 is not None:
-        videos.append((_video_priority(rendered, args.video_track), mix_wav, mix_mp4))
+        videos.append((_video_priority(rendered, args.video_track), mix_wav, mix_mp4, "black"))
     if groups and args.video:
         for stem, members in groups:
             wanted = args.video_track
             if wanted is not None and not any(_track_matches(r.voice, wanted) for r in members):
                 wanted = None
-            videos.append((_video_priority(members, wanted), stem.with_suffix(".wav"), stem.with_suffix(".mp4")))
+            videos.append((_video_priority(members, wanted), stem.with_suffix(".wav"),
+                           stem.with_suffix(".mp4"), None))
     if parts and args.video:
         for stem, members in parts:
             members = sorted(members, key=lambda r: r.voice.voice_index)
-            videos.append((members, stem.with_suffix(".wav"), stem.with_suffix(".mp4")))
+            videos.append((members, stem.with_suffix(".wav"), stem.with_suffix(".mp4"), None))
     if not videos:
         return
     if all(n.video_ref is None for r in rendered for n in r.video_notes):
         raise SystemExit("video output: the chosen segments have no video source")
 
+    key_color = _key_color(args, rendered)
     cache = Path(tempfile.mkdtemp(prefix="madgen-clips-", dir=mix_wav.parent))
     try:
-        for ordered, audio, out in videos:
-            print(f"  video {out.name} follows {' > '.join(r.voice.label for r in ordered)}", file=sys.stderr)
-            spans = build_spans([r.video_notes for r in ordered], total_sec, FPS)
-            render_video(spans, audio, out, cache, fps=FPS)
+        for ordered, audio, out, background in videos:
+            # A single track has nothing to lay out: it is always shown full screen.
+            layered = args.video_layout == "layered" and len({r.track_key for r in ordered}) > 1
+            if layered:
+                layers = build_layers(ordered, total_sec, args)
+                print(f"  video {out.name} layers: {', '.join(lyr.name for lyr in layers)}", file=sys.stderr)
+                render_layered_video(layers, audio, out, cache, WIDTH, HEIGHT, FPS, key=key_color,
+                                     background=background)
+            else:
+                print(f"  video {out.name} follows {' > '.join(r.voice.label for r in ordered)}",
+                      file=sys.stderr)
+                spans = build_spans([r.video_notes for r in ordered], total_sec, FPS)
+                render_video(spans, audio, out, cache, WIDTH, HEIGHT, FPS, key=key_color,
+                             background=background)
             print(f"  wrote {out}", file=sys.stderr)
     finally:
-        shutil.rmtree(cache, ignore_errors=True)
+        if os.environ.get("MADGEN_KEEP_CLIPS"):
+            print(f"  kept clip cache: {cache}", file=sys.stderr)
+        else:
+            shutil.rmtree(cache, ignore_errors=True)
