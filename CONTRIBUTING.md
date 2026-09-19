@@ -3,11 +3,14 @@
 ## 環境の構築
 
 ```sh
-uv sync                  # メロディモードのみ
-uv sync --extra lyrics   # 歌詞モードの素材解析も動かす場合（GPU 推奨）
+uv sync                                # メロディモードのみ
+uv sync --extra lyrics --extra cpu      # 歌詞モード: CPU
+uv sync --extra lyrics --extra cu128    # 歌詞モード: NVIDIA GPU（Windows / Linux）
 ```
 
-`uv add` / `uv remove` / extra を指定しない `uv sync` を実行すると lyrics extra が削除される。その場合は `uv sync --extra lyrics` で再導入すること。
+`cpu` と `cu128` は排他的で、`--all-extras` は使えない。歌詞モードの実行時も `uv run --extra lyrics --extra cpu ...` または `uv run --extra lyrics --extra cu128 ...` のように指定し、同期時と同じバックエンドを選ぶこと。extra を指定しない `uv sync` で削除された依存は、上記の該当コマンドで再導入する。
+
+依存定義を変更した場合は、upstream と同じ通常の index 設定で `uv lock` を実行すること。CPU / CUDA 両方を含む lock を更新し、ローカル専用 index への無関係な取得先変更は PR に含めない。CI は `--locked` を使うため、lock の更新も必要になる。
 
 ## lint とテスト
 
