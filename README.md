@@ -19,7 +19,14 @@ uv tool install madgen
 uv tool install "madgen[lyrics]" --torch-backend=auto
 ```
 
-`--torch-backend=auto` は、uv が GPU とドライバを調べて、その環境に合う PyTorch を選ぶ指定です。**Windows で GPU を使う場合は必須です**。付けないと PyPI の既定が入り、Windows ではそれが CPU 専用のため、GPU があっても使われません（Linux では既定が CUDA 版なので、付けなくても GPU は使えます）。
+`--torch-backend=auto` は、uv が GPU とドライバを調べて、その環境に合う PyTorch を選ぶ指定です。**Windows と ARM 版 Linux で GPU を使う場合は必須です**。付けないと PyPI の既定が入りますが、その中身は環境によって違います。
+
+| 環境 | 付けなかった場合に入るもの |
+| --- | --- |
+| Linux x86_64 | CUDA 版。GPU が使えます |
+| Windows x64 | **CPU 専用。GPU があっても使われません** |
+| Linux aarch64 | **CPU 専用。GPU があっても使われません** |
+| macOS | Mac 版（CUDA は存在しません） |
 
 pip でも入ります（Python 3.12 以上）:
 
@@ -28,7 +35,7 @@ pip install madgen
 pip install "madgen[lyrics]"
 ```
 
-pip には環境を見て選ぶ機能がありません。**Windows で GPU を使う場合は uv を使ってください。** PyTorch を先に CUDA 版で入れる方法もありますが、madgen が要求するバージョンと合わせる必要があり、依存が更新されるたびに指定し直すことになります。
+pip には環境を見て選ぶ機能がありません。**上の表で CPU 専用になる環境で GPU を使う場合は、uv を使ってください。** PyTorch を先に CUDA 版で入れる方法もありますが、madgen が要求するバージョンと合わせる必要があり、依存が更新されるたびに指定し直すことになります。
 
 ```sh
 # 既存の環境に入れる場合も、uv なら1コマンドで済みます
