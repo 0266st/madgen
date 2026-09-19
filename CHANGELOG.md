@@ -19,7 +19,7 @@
 
 ### 修正
 
-- Windows で日本語のファイル名を含む素材の解析が文字コードエラーで停止する問題を修正。ffmpeg の出力を UTF-8 として読み取るようにした。
+- Windows で日本語のファイル名を含む素材の解析が文字コードエラーで停止する問題を修正。ffmpeg の出力を UTF-8 として読み取るようにした（[#16]）。
 
 ## [0.2.0] - 2026-09-18
 
@@ -60,3 +60,4 @@
 [#2]: https://github.com/0266st/madgen/pull/2
 [#4]: https://github.com/0266st/madgen/pull/4
 [#6]: https://github.com/0266st/madgen/pull/6
+[#16]: https://github.com/0266st/madgen/pull/16

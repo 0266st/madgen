@@ -182,7 +182,7 @@ def test_lyrics_render_end_to_end(tmp_path):
     render(build_parser().parse_args(
         ["render", "--db", str(db_path), "--ust", str(ustx), "--out-dir", str(out_dir), "--split-parts",
          "--workers", "1"]))
-    plan = json.loads((out_dir / "plan.json").read_text())
+    plan = json.loads((out_dir / "plan.json").read_text(encoding="utf-8"))
     assert [(e["phoneme"], e["matched_rank"]) for e in plan] == [("k", 1), ("a", 1), ("a", 1), ("N", None)]
     assert plan[0]["pitch_corrected"] is False            # consonant: never corrected
     assert plan[2]["pitch_corrected"] is True              # + melisma on B4 from an A4 segment
@@ -229,7 +229,7 @@ def test_vowel_sustained_for_the_whole_note(tmp_path, sustain):
     y, sr = sf.read(out_dir / "mix.wav")
     peak = np.max(np.abs(y[: sr]))
     late = np.max(np.abs(y[int(0.6 * sr): int(0.95 * sr)]))
-    plan = json.loads((out_dir / "plan.json").read_text())
+    plan = json.loads((out_dir / "plan.json").read_text(encoding="utf-8"))
     if sustain:
         # The 0.2 s core is stretched over the 1 s note (not the quiet tail): still loud near the end...
         assert late > 0.5 * peak

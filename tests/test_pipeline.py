@@ -97,7 +97,7 @@ def test_pitch_threshold(tmp_path):
     def corrected(*extra):
         out_dir = tmp_path / ("_".join(extra) or "default")
         render(_render_args(db_path, mid, "--out-dir", str(out_dir), *extra))
-        return [e["pitch_corrected"] for e in json.loads((out_dir / "plan.json").read_text())]
+        return [e["pitch_corrected"] for e in json.loads((out_dir / "plan.json").read_text(encoding="utf-8"))]
 
     assert corrected() == [False, False]                          # in tune: untouched by default
     assert corrected("--pitch-threshold", "0") == [True, True]    # 0 = always correct

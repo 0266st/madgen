@@ -1,3 +1,5 @@
+"""ffmpeg handles Japanese filenames and decodes its diagnostics as UTF-8."""
+
 import wave
 
 import pytest
@@ -21,4 +23,6 @@ def test_run_reports_japanese_missing_filename(tmp_path):
     with pytest.raises(RuntimeError) as error:
         ffmpeg.run(["-i", str(source), "-f", "null", "-"])
     assert "ffmpeg failed" in str(error.value)
-    assert source.name in str(error.value)
+    stderr = str(error.value).split("\n", 1)[1]
+    assert "No such file" in stderr
+    assert source.name in stderr
