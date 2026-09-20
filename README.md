@@ -16,8 +16,17 @@ target と source（音声/動画、複数可）を渡すと、source の断片�
 uv tool install madgen
 
 # 歌詞モードの素材解析まで使う場合（GPU 推奨）
-uv tool install "madgen[lyrics]"
+uv tool install "madgen[lyrics]" --torch-backend=auto
 ```
+
+`--torch-backend=auto` は、uv が GPU とドライバを調べて、その環境に合う PyTorch を選ぶ指定です。**Windows と ARM 版 Linux で GPU を使う場合は必須です**。付けないと PyPI の既定が入りますが、その中身は環境によって違います。
+
+| 環境 | 付けなかった場合に入るもの |
+| --- | --- |
+| Linux x86_64 | CUDA 版。GPU が使えます |
+| Windows x64 | **CPU 専用。GPU があっても使われません** |
+| Linux aarch64 | **CPU 専用。GPU があっても使われません** |
+| macOS | Mac 版（CUDA は存在しません） |
 
 pip でも入ります（Python 3.12 以上）:
 
@@ -26,7 +35,14 @@ pip install madgen
 pip install "madgen[lyrics]"
 ```
 
-配布版の `uv tool install` / `pip install` には、下記のリポジトリ専用の `tool.uv.sources` 設定は適用されません。CPU / CUDA の取得先を指定して uv で管理したい場合は、リポジトリを直接使ってください。
+pip には環境を見て選ぶ機能がありません。**上の表で CPU 専用になる環境で GPU を使う場合は、uv を使ってください。** PyTorch を先に CUDA 版で入れる方法もありますが、madgen が要求するバージョンと合わせる必要があり、依存が更新されるたびに指定し直すことになります。
+
+```sh
+# 既存の環境に入れる場合も、uv なら1コマンドで済みます
+uv pip install --torch-backend=auto "madgen[lyrics]"
+```
+
+配布版の `uv tool install` / `uv pip install` / `pip install` には、下記のリポジトリ専用の `tool.uv.sources` 設定は適用されません。配布版では上記の `--torch-backend=auto`、リポジトリでは下記の `--extra cpu` / `--extra cu128` で PyTorch の取得先を選んでください。
 
 ### Windows / Linux 版（Python を入れずに使う）
 
@@ -45,7 +61,7 @@ tar xzf madgen-vX.Y.Z-linux-x64.tar.gz && cd madgen-vX.Y.Z-linux-x64
 ./madgen render --db work/corpus.sqlite --melody target/target.mid --out-dir work/out --video
 ```
 
-- **メロディモード専用**です。歌詞モード（音素解析）は含みません。歌詞モードを使う場合は、上の `uv tool install "madgen[lyrics]"` で入れてください（GPU 推奨）。
+- **メロディモード専用**です。歌詞モード（音素解析）は含みません。歌詞モードを使う場合は、上の `uv tool install "madgen[lyrics]" --torch-backend=auto` で入れてください（GPU 推奨）。
 - ffmpeg を同梱しているため、これらの配布物には **GPLv3** が適用されます（madgen 自身のソースコードは MIT のままです）。詳細は同梱の `THIRD_PARTY_LICENSES/` を参照してください。
 - Linux 版は glibc 2.35 以降（Ubuntu 22.04、Debian 12 以降など）で動きます。それより古い環境では `uv tool install madgen` を使ってください。
 - **macOS 用の配布物はありません**。`uv tool install madgen` で入れてください（必要なものは自動で用意されます）。
@@ -60,7 +76,7 @@ uv sync --extra lyrics --extra cu128    # 歌詞モード: NVIDIA GPU（CUDA 12.
 
 `cpu` と `cu128` はどちらか一方を選び、`uv run` にも同じ extra を指定してください。PyTorch・torchaudio・torchvision の取得先を extra ごとに固定するため、手動で GPU 版を入れ直す必要はありません。両方を同時に指定すること（`--all-extras` を含む）はできません。
 
-macOS は `cpu` を使ってください（PyTorch は通常の index から取得します）。`cu128` は対応する NVIDIA GPU とドライバーが必要です。`--device cpu` / `cuda` は実行時の選択で、インストールする PyTorch の種類は変更しません。既存の `--extra lyrics` 単独指定も使えますが、CPU / CUDA の種類は通常の index の解決結果に依存します。
+macOS は `cpu` を使ってください（PyTorch は通常の index から取得します）。`cu128` は対応する NVIDIA GPU とドライバーが必要です。`--device cpu` / `cuda` は実行時の選択で、インストールする PyTorch の種類は変更しません。**`--extra lyrics` の単独指定は推奨しません。** `cpu` / `cu128` を省くと PyTorch は通常の index から取得され、PyPI の既定では環境によって CPU / CUDA の種類が異なります（上の表を参照）。GPU があっても CPU 版が入る場合があるため、バックエンドを明示してください。
 
 - ffmpeg は `imageio-ffmpeg` の静的バイナリを使うので、システムへのインストールは不要です。
 - 歌詞モードの素材解析は GPU（CUDA）を推奨します。CPU では `--device cpu --whisper-model small` を指定してください。既定の large-v3 を使う場合、初回は whisperX と音素認識モデル（計約4 GB）をダウンロードします。

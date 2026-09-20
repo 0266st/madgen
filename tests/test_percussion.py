@@ -69,7 +69,7 @@ def _render(db_path, mid, tmp_path, name, *extra):
     render(build_parser().parse_args(
         ["render", "--db", str(db_path), "--melody", str(mid), "--out-dir", str(out_dir),
          "--workers", "1", *extra]))
-    return json.loads((out_dir / "plan.json").read_text()), out_dir
+    return json.loads((out_dir / "plan.json").read_text(encoding="utf-8")), out_dir
 
 
 def test_one_sound_per_instrument(tmp_path):
