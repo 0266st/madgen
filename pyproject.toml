@@ -41,6 +41,19 @@ madgen = "madgen:main"
 lyrics = [
     "pyopenjtalk-plus>=0.4.1.post9",
     "whisperx>=3.8.6",
+    "torch~=2.8.0",
+    "torchaudio~=2.8.0",
+    "torchvision~=0.23.0",
+]
+cpu = [
+    "torch~=2.8.0",
+    "torchaudio~=2.8.0",
+    "torchvision~=0.23.0",
+]
+cu128 = [
+    "torch~=2.8.0",
+    "torchaudio~=2.8.0",
+    "torchvision~=0.23.0",
 ]
 
 [build-system]
@@ -65,3 +78,30 @@ select = ["E", "F", "W", "I", "B", "UP"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.uv]
+conflicts = [[{ extra = "cpu" }, { extra = "cu128" }]]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { index = "pytorch-cu128", extra = "cu128" },
+]
+torchaudio = [
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { index = "pytorch-cu128", extra = "cu128" },
+]
+torchvision = [
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { index = "pytorch-cu128", extra = "cu128" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

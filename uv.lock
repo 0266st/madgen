@@ -2,16 +2,37 @@ version = 1
 revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
-    "python_full_version >= '3.14' and sys_platform == 'win32'",
-    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
-    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32'",
-    "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
-    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'emscripten'",
-    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128'",
+    "(python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')",
+    "(python_full_version == '3.13.*' and platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (python_full_version == '3.13.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (python_full_version == '3.13.*' and sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')",
+    "(python_full_version < '3.13' and platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (python_full_version < '3.13' and platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (python_full_version < '3.13' and sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')",
+    "python_full_version == '3.13.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
 ]
+conflicts = [[
+    { package = "madgen", extra = "cpu" },
+    { package = "madgen", extra = "cu128" },
+]]
 
 [[package]]
 name = "aiohappyeyeballs"
@@ -33,7 +54,7 @@ dependencies = [
     { name = "frozenlist" },
     { name = "multidict" },
     { name = "propcache" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
     { name = "yarl" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/58/d9/22ce5786ac0c1653ae8b6c23bded02c1686d11f0dbb45b31ce128e0df985/aiohttp-3.14.3.tar.gz", hash = "sha256:9491196535a88924a60afd5b5f434b5b203b6cc616250878dbdb223a8f7844bc", size = 7971213, upload-time = "2026-07-23T01:57:27.037Z" }
@@ -128,7 +149,7 @@ version = "1.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "frozenlist" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/61/62/06741b579156360248d1ec624842ad0edf697050bbaf7c3e46394e106ad1/aiosignal-1.4.0.tar.gz", hash = "sha256:f47eecd9468083c2029cc99945502cb7708b082c232f9aca65da147157b251c7", size = 25007, upload-time = "2025-07-03T22:54:43.528Z" }
 wheels = [
@@ -179,7 +200,9 @@ version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
-    { name = "torch" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/90/fa/5c2be1f96dc179f83cdd3bb267edbd1f47d08f756785c016d5c2163901a7/asteroid-filterbanks-0.4.0.tar.gz", hash = "sha256:415f89d1dcf2b13b35f03f7a9370968ac4e6fa6800633c522dac992b283409b9", size = 24599, upload-time = "2021-04-09T20:03:07.456Z" }
@@ -236,7 +259,7 @@ name = "cffi"
 version = "2.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pycparser", marker = "implementation_name != 'PyPy'" },
+    { name = "pycparser", marker = "implementation_name != 'PyPy' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/9e/ef/008a1939e372c06329a3fce4279c02f328488f3526744906eeec3da7ad5f/cffi-2.1.1.tar.gz", hash = "sha256:dd31f52ea1086513bb9df30f8fcee9b8918323ae067a3d5b78bc826a000712be", size = 530807, upload-time = "2026-08-03T21:21:18.939Z" }
 wheels = [
@@ -479,7 +502,7 @@ name = "colorlog"
 version = "6.12.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/8c/55/ba79756cb90c8d69d599d57785398ac87bba7b19c80e87f4e8a562197c93/colorlog-6.12.0.tar.gz", hash = "sha256:2a7924c1dadf18b22a0eb8b06d1c7b01d5341707ec1641eb6fcc4fde0c3e8e5f", size = 18151, upload-time = "2026-07-23T13:40:40.71Z" }
 wheels = [
@@ -838,7 +861,9 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/72/18/3fc6d951466ae9a2a688edcddde3b2e388da0a8244e0caf7117bbeb0eb95/greenlet-3.5.6-cp312-cp312-macosx_11_0_universal2.whl", hash = "sha256:a5876d0a60355af98d535c47f6cd6eb0f8a432396dab26845d380b92f8412422", size = 295668, upload-time = "2026-09-14T14:22:33.241Z" },
     { url = "https://files.pythonhosted.org/packages/27/89/366d2af5061eeefa5012f510d95a99c8620dcc457609838db4d538820318/greenlet-3.5.6-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:e85880b538e59a59f55117b81f208a6660ad5ac328aad9305f812d9b8bc67a0f", size = 611700, upload-time = "2026-09-14T15:12:01.962Z" },
     { url = "https://files.pythonhosted.org/packages/54/1c/07f133f865fd58ae593dd2bbec3144acaee9b04ffe2eb48c6e121747ceef/greenlet-3.5.6-cp312-cp312-manylinux_2_24_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:f0ba7c2a329d650628f4c8572fd1db29f0a59dd70a3e3e0710dcf18a35cce9d8", size = 624223, upload-time = "2026-09-14T15:20:42.459Z" },
+    { url = "https://files.pythonhosted.org/packages/a7/f2/844dc823ff2752ad049caa6b59d57e4572f9c445934b02d3518f4c67197c/greenlet-3.5.6-cp312-cp312-manylinux_2_24_s390x.manylinux_2_28_s390x.whl", hash = "sha256:ee7d9da3bf493909cf811a3f038840cb34fab5ae2956b8a263919f6e289ab188", size = 629529, upload-time = "2026-09-14T15:25:06.354Z" },
     { url = "https://files.pythonhosted.org/packages/66/6a/1594f3869c57c149abdb380492529e04d4c0229b5e4d79572c5bd0aaa673/greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:975736b002ed080d124cf81a79cb7e05cb26d6b3f5c7a7b651c0fcce70353aa1", size = 621404, upload-time = "2026-09-14T14:35:59.027Z" },
+    { url = "https://files.pythonhosted.org/packages/c0/42/b1f8dbc89a53b9e77859fc1ad1627d106fc361daa3ea4bdf43a91ebb4338/greenlet-3.5.6-cp312-cp312-manylinux_2_39_riscv64.whl", hash = "sha256:71890d5247020c25c21a6b65202782bfc281d4e6e244842419d30e3492bb6dcc", size = 432385, upload-time = "2026-09-14T15:28:37.369Z" },
     { url = "https://files.pythonhosted.org/packages/a2/f5/33e5c9e48178b9259fd000f8f45caa4a65036f65d3d0c06a602f570f025d/greenlet-3.5.6-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:0616b8f878098c5681fd8f0dc92d887551717402342a70f0abcbfea5f5ad8a44", size = 1584998, upload-time = "2026-09-14T15:10:06.653Z" },
     { url = "https://files.pythonhosted.org/packages/ef/31/9b4e140bc24d0ad7927ebd651f5608b0acc2334d061748c3b6ad19085cfa/greenlet-3.5.6-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:3dbb4596a6a4e5d47121a33ff20533a81e60f302d9e67b69909a8bc21a43f0a7", size = 1647568, upload-time = "2026-09-14T14:35:49.787Z" },
     { url = "https://files.pythonhosted.org/packages/c3/71/d79f1791f824f8ff15c2978746640467ae932a2365e0201069f7f272395f/greenlet-3.5.6-cp312-cp312-win_amd64.whl", hash = "sha256:7ac4abb3877c43af320392c664774eef6fa2cc063c79a55fc02d844a3cbe7395", size = 324203, upload-time = "2026-09-14T14:22:54.504Z" },
@@ -846,7 +871,9 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f1/a1/e720a38852366c589e1a46cf570b886507ad2cf591050c203365638baab0/greenlet-3.5.6-cp313-cp313-macosx_11_0_universal2.whl", hash = "sha256:f96f0e30b5a95c7631b12bfe214cbc90ec8fe8cfa36920596c10514a65743519", size = 294627, upload-time = "2026-09-14T14:24:40.102Z" },
     { url = "https://files.pythonhosted.org/packages/eb/c3/58187858df41354a11e6a55b421e7af9059798abdab3a384cc51b8567c38/greenlet-3.5.6-cp313-cp313-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:c75116c9de79949de23006e2d9b35ee82874c594fcf5c0311b439acaa14b8441", size = 614356, upload-time = "2026-09-14T15:12:03.399Z" },
     { url = "https://files.pythonhosted.org/packages/ce/b9/3a7e67d5f05c9760b1ad411fa52264bd69cc08e22a2ebfb4018b90628ced/greenlet-3.5.6-cp313-cp313-manylinux_2_24_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:cad5782f93f7f738b62c6527b6f32a60694d924029f299a8b524758cfa53d815", size = 626756, upload-time = "2026-09-14T15:20:44.269Z" },
+    { url = "https://files.pythonhosted.org/packages/c6/7c/40400455f5b5a65bb83e94fde66d1be9e5ec518638113f8083ace746c309/greenlet-3.5.6-cp313-cp313-manylinux_2_24_s390x.manylinux_2_28_s390x.whl", hash = "sha256:a93ee7c6e8fd0f8a83525a51bd777be57ee17787e91d805bd8d6faf9dcada18e", size = 632632, upload-time = "2026-09-14T15:25:07.813Z" },
     { url = "https://files.pythonhosted.org/packages/85/cb/ab0c123c514ed4e94c0dc9ee2e86362633e6b998cfc05de7fc9ac2eb9690/greenlet-3.5.6-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:f98e8215e172f567ce80eeaed9107fb4d32b6c44f26983d9b8334658136a205a", size = 623779, upload-time = "2026-09-14T14:36:01.104Z" },
+    { url = "https://files.pythonhosted.org/packages/f9/67/1f35cff30a6c51c3f23b63d4afcc7313ab4f97490ba3676fa78178984b27/greenlet-3.5.6-cp313-cp313-manylinux_2_39_riscv64.whl", hash = "sha256:7f731ebac68ea06d628658295cb2d217b10186329fcf9a3b6a149045059bf92e", size = 434933, upload-time = "2026-09-14T15:28:38.858Z" },
     { url = "https://files.pythonhosted.org/packages/a5/26/fda8a5a06e7073333ccb038133c5893b9e0c4fe29d5992a17e83c241bc6e/greenlet-3.5.6-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:df19e2d0b1620039af5102563fbd96e8938c7f5c3f5828528d641d9fc585525e", size = 1584930, upload-time = "2026-09-14T15:10:08.234Z" },
     { url = "https://files.pythonhosted.org/packages/2f/37/50f8813163148d6234e08b23dcad6a9e37f01d148c8ec976e4c44ea2d918/greenlet-3.5.6-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:06c0e933290fba8ffe53ead4ae1b8044b0e9754b75cebf381aa2bc3e50d82fac", size = 1647590, upload-time = "2026-09-14T14:35:51.173Z" },
     { url = "https://files.pythonhosted.org/packages/86/da/b7669b09586365654083a62bd0724cf06cb74bd5085a15cdd161271f992f/greenlet-3.5.6-cp313-cp313-win_amd64.whl", hash = "sha256:5b602b4201b965a8354d74e232364a66ff243dd142e350d035f46169bb36e13d", size = 324086, upload-time = "2026-09-14T14:23:48.428Z" },
@@ -854,7 +881,9 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/66/c0/d254544ae2b8bdd311aef000fafc02828c2771b17d994b3075620ea7cc6e/greenlet-3.5.6-cp314-cp314-macosx_11_0_universal2.whl", hash = "sha256:8cddea1b8339451c2fb3388e138347b6126744f33b611bdb55b7357361cfef46", size = 295221, upload-time = "2026-09-14T14:25:11.583Z" },
     { url = "https://files.pythonhosted.org/packages/18/18/eb54be16b9cc3971e09ca5b73334e1b8c804a4630d9addaaf218a4fe300f/greenlet-3.5.6-cp314-cp314-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:c59acfa8eb73a1e0d484392dc002bdf001fd4ce73394e0132df3d1ab6093d7cb", size = 660992, upload-time = "2026-09-14T15:12:04.876Z" },
     { url = "https://files.pythonhosted.org/packages/8f/b4/e193efe65671dcf294bc51fcc59efb52d154adf8612c4ea016da0d2c486c/greenlet-3.5.6-cp314-cp314-manylinux_2_24_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:a3b4a01c6da07ef9f80d4fe8933b994bc99747bcea3eab0330a9c34d3c12655b", size = 673428, upload-time = "2026-09-14T15:20:45.756Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/21/631bb45fafde1dca782152377c0676d182ec924820064047f533a3627b28/greenlet-3.5.6-cp314-cp314-manylinux_2_24_s390x.manylinux_2_28_s390x.whl", hash = "sha256:dd0b83bed3405b586a3133629f1d1a5bc7bfd64822a3b7ab342bdc68e6dbc61b", size = 677688, upload-time = "2026-09-14T15:25:09.279Z" },
     { url = "https://files.pythonhosted.org/packages/45/ac/28fa7a9e50f2859466214c4ac584d776db52c1604ad4dd158960a5af2a1f/greenlet-3.5.6-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:9a09d59bef1db94f384b5bcc2d523694d338f3df6b757aeeaf7baca5d0c0be88", size = 670773, upload-time = "2026-09-14T14:36:02.577Z" },
+    { url = "https://files.pythonhosted.org/packages/40/30/2b0a73e68e1e18e30b601d0d183cfdfc2beca4de5a6843c630f0fc9fb90c/greenlet-3.5.6-cp314-cp314-manylinux_2_39_riscv64.whl", hash = "sha256:fdacf26402389bdd89857ad3c045a26fe8f3314f9a8b28226f82f88463a65b77", size = 480475, upload-time = "2026-09-14T15:28:40.741Z" },
     { url = "https://files.pythonhosted.org/packages/c3/cd/fb7d6cdd86ff3427c1494854f0e35437eba05142be91f530f6da75e09e19/greenlet-3.5.6-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:8b7c73d1cef3d9ae963e9ff03f6222df43efbb9054ffd2f1969c935b7fc84c02", size = 1631900, upload-time = "2026-09-14T15:10:09.745Z" },
     { url = "https://files.pythonhosted.org/packages/f6/40/143bdbb20a516628cb15074ae52ed17d850b450292609c7a6fccac6dbece/greenlet-3.5.6-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:8b27df301f56e3b3d2298095c8f7d6b68f2521f6b1693e901fa039bdbae34424", size = 1693740, upload-time = "2026-09-14T14:35:52.959Z" },
     { url = "https://files.pythonhosted.org/packages/c9/9e/019642432e6ae283301df1361227d47610709d2dc69a38f95edef266d713/greenlet-3.5.6-cp314-cp314-win_amd64.whl", hash = "sha256:f8f0bd690e1a41294ac87905e8121c81a3761ec2583c768f13467428606c8c7a", size = 327473, upload-time = "2026-09-14T14:28:12.948Z" },
@@ -862,14 +891,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/14/7e/7a205688a5b3074933b18a906608d46d106e9a79d776bdab5a4abf4b4feb/greenlet-3.5.6-cp314-cp314t-macosx_11_0_universal2.whl", hash = "sha256:97c5a53e8c1754df58e73f047a99e287d4da1bdfe64b0072fb25c87000897951", size = 305352, upload-time = "2026-09-14T14:21:31.962Z" },
     { url = "https://files.pythonhosted.org/packages/78/cb/9c4a57a9d9dd0256e20b8f7f4f06554c2c92badebf0ab73ce344321b78b9/greenlet-3.5.6-cp314-cp314t-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:fea4427d1ffdb3b523d7daa6712038428a4c16c450b9777bdd1221cfee0eab49", size = 672671, upload-time = "2026-09-14T15:12:06.347Z" },
     { url = "https://files.pythonhosted.org/packages/97/52/c6729681ebbd298f4decd28746815acc8a0b0a0fde21d2df33776fd4d042/greenlet-3.5.6-cp314-cp314t-manylinux_2_24_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:73a29b5ba642e35433166a03a3e02935e7238c4b3467fbd77523b99edea23e5b", size = 679489, upload-time = "2026-09-14T15:20:47.291Z" },
+    { url = "https://files.pythonhosted.org/packages/71/76/3c11c21e0716b1f1dc7c1a4b3d690abb1d3b448c69a9d32049fecb64010a/greenlet-3.5.6-cp314-cp314t-manylinux_2_24_s390x.manylinux_2_28_s390x.whl", hash = "sha256:61a61b4a95a4f97922c3a6f5606d3e360851584bd47e500a5161373c53810e3d", size = 681303, upload-time = "2026-09-14T15:25:11.088Z" },
     { url = "https://files.pythonhosted.org/packages/58/c5/2b6c721ba8b8963da42d5a0f57f25b8aaeb1fe9bdd156875e57f3be648a2/greenlet-3.5.6-cp314-cp314t-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:460e70b033aba8ed47e2ac9b5d0d2157b05a34fbfa30a241400aef4118902cdc", size = 676608, upload-time = "2026-09-14T14:36:03.959Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/26/3ae402202452cd5941bbbd483e5a74297e2397e7aa3182c2a5e3ab7d5666/greenlet-3.5.6-cp314-cp314t-manylinux_2_39_riscv64.whl", hash = "sha256:fe3170a69fe039b18ad18171e66faa9a75f6fe9d78f968fd9b54e09fbd714d81", size = 510112, upload-time = "2026-09-14T15:28:42.112Z" },
     { url = "https://files.pythonhosted.org/packages/b2/04/0d018e0d05bcdde19a0fcb907834155f1fc853a9bedd3f3f5e6acadcae19/greenlet-3.5.6-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:ca80a49b53ed1d22f7282da7255f7bb2fd1935fd0f623d8613fda38745f18961", size = 1641479, upload-time = "2026-09-14T15:10:11.216Z" },
     { url = "https://files.pythonhosted.org/packages/59/bb/f02ef9073919158f6403fe3701d4ed4403d646720e7201dfc6e9d264bac3/greenlet-3.5.6-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:916f92f2a8db10508f739d0b5e00b83defe5d1115a997c54532a6d7cf8c95404", size = 1698758, upload-time = "2026-09-14T14:35:54.336Z" },
     { url = "https://files.pythonhosted.org/packages/08/a5/1f48fe647473a2dcccfd1839b2ff2c78eb57009be776b4da071e901c9bff/greenlet-3.5.6-cp314-cp314t-win_amd64.whl", hash = "sha256:886bcf1870af74c32bc310fd00a6b803445e17e51b7d5a107c7b35c0f362cc16", size = 331574, upload-time = "2026-09-14T14:27:18.451Z" },
     { url = "https://files.pythonhosted.org/packages/cd/72/3882855a75838faeb54a58aeef4fd77d20b2a86d4bad570c70d41b565dcf/greenlet-3.5.6-cp315-cp315-macosx_11_0_universal2.whl", hash = "sha256:3ac3494c381dab876cad7d0b22f3a722f3e0c8deb3a65b9e7f35ad7f58b8fcb3", size = 295926, upload-time = "2026-09-14T14:27:21.16Z" },
     { url = "https://files.pythonhosted.org/packages/10/1f/be4d957d8a9b90bcbe8db206548a42134d96222d43e5ed3fc4708fb6e24b/greenlet-3.5.6-cp315-cp315-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:602024dae6d77e161f4b89491b62ca1d4f19949d79d47b2db057e476d21179d6", size = 666910, upload-time = "2026-09-14T15:12:07.901Z" },
     { url = "https://files.pythonhosted.org/packages/a1/af/60d62571a7d6de961e4ce7625d6c2faf359345659fc782d2cdf517c34577/greenlet-3.5.6-cp315-cp315-manylinux_2_24_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:f8e63209c3e1e828ee6a457529b4a6d8b05d050fe0ae03a7ae49e967c5d312e0", size = 677415, upload-time = "2026-09-14T15:20:48.817Z" },
+    { url = "https://files.pythonhosted.org/packages/f5/41/b3114c97c10e796010f00a30f51c81470072bca4b53e396ccca87484fcf7/greenlet-3.5.6-cp315-cp315-manylinux_2_24_s390x.manylinux_2_28_s390x.whl", hash = "sha256:9133d68624b1f2e89ec2f554d56aea8a5b0d7168cd9320200ba58d4d794845a4", size = 681337, upload-time = "2026-09-14T15:25:12.812Z" },
     { url = "https://files.pythonhosted.org/packages/fb/16/ac9e547b611539aaed1870eb1d6ddc57abdd5924b3a99bb9b5f0b44176b8/greenlet-3.5.6-cp315-cp315-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:ccadce0130fd813ec86ebfe969a6c58b42acc1d0fe55a47525375b740e07b605", size = 675927, upload-time = "2026-09-14T14:36:05.34Z" },
+    { url = "https://files.pythonhosted.org/packages/48/1b/d41861c2fa00968e39e467a495ca8db9ce9b6310a5d9b57561b3d0dc48fa/greenlet-3.5.6-cp315-cp315-manylinux_2_39_riscv64.whl", hash = "sha256:5adcbbfe78bdc242c71740a02e0991cc1b2f34d33c8bb15ca45eee8fd1140942", size = 487339, upload-time = "2026-09-14T15:28:43.497Z" },
     { url = "https://files.pythonhosted.org/packages/c4/b1/b7ba08d6431121741f1d30be0d5d292e76873325179a63586cd9217b62f6/greenlet-3.5.6-cp315-cp315-musllinux_1_2_aarch64.whl", hash = "sha256:9297fb9c39b9a2c039dbcd306c410bd6906b95244dec3bba4318d36c718c164c", size = 1637236, upload-time = "2026-09-14T15:10:12.442Z" },
     { url = "https://files.pythonhosted.org/packages/af/c5/3b1cbc68f0c082022fc8717f7fe4b8b13b8d583c52352be37f4e9f55bcd2/greenlet-3.5.6-cp315-cp315-musllinux_1_2_x86_64.whl", hash = "sha256:b374e79ffa7511afc11773aef40a4ccea6191fba1c856ea2f9c56738dca69d7a", size = 1698526, upload-time = "2026-09-14T14:35:56.039Z" },
     { url = "https://files.pythonhosted.org/packages/de/56/12941ed2711400451c89d544e10f831800a2770f19dd55eac8f0f7f2003b/greenlet-3.5.6-cp315-cp315-win_amd64.whl", hash = "sha256:7969bffa322c097bd46ae595ada6a931cefda613f18ba64587e9cff4cb320756", size = 327739, upload-time = "2026-09-14T14:23:55.768Z" },
@@ -877,7 +910,9 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/16/c2/86cfc5555a98e12b86966ddbd24fd39af32f71f2f785c6595b7feb2db156/greenlet-3.5.6-cp315-cp315t-macosx_11_0_universal2.whl", hash = "sha256:de3de000d459402cda015068fd135aa50c0bf6f2477a80d4da1e646f123b4e78", size = 306244, upload-time = "2026-09-14T14:27:57.565Z" },
     { url = "https://files.pythonhosted.org/packages/14/6d/83ffc9d05a75a80ab3a7595dbb1d9604e5d4fc2996d73a8ae2dbd1284900/greenlet-3.5.6-cp315-cp315t-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:45663c01a4de48b9a64a2ee1509d92d1dfd3afb02b2ccfc9333029d11aef996a", size = 676578, upload-time = "2026-09-14T15:12:09.468Z" },
     { url = "https://files.pythonhosted.org/packages/5d/d6/c2cf684810e5caded075970aaadea654ecb58b8382b9aecf1d231b936894/greenlet-3.5.6-cp315-cp315t-manylinux_2_24_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:3deccbb57a481e3a408fe61cdfd5c13e0678fc0a30fdd09597917ca87b4be877", size = 684203, upload-time = "2026-09-14T15:20:50.261Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/d1/039c353d5593a97a89699e989324c9bc86af499e6c6152fe0180f5742204/greenlet-3.5.6-cp315-cp315t-manylinux_2_24_s390x.manylinux_2_28_s390x.whl", hash = "sha256:63aff70fe5aac59c72215f42ec39fcb59ff46774fa966e717f8ecb6ee2273577", size = 686023, upload-time = "2026-09-14T15:25:14.528Z" },
     { url = "https://files.pythonhosted.org/packages/62/19/00e1bee5d2af890dc8f400b54d0b0f9b489965f92bc12b407ff72cc6f469/greenlet-3.5.6-cp315-cp315t-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:311018b46472fb26ee85870847fb89eb64cc8aaddb617400789d87076f7cfeec", size = 681253, upload-time = "2026-09-14T14:36:06.742Z" },
+    { url = "https://files.pythonhosted.org/packages/8a/62/97ceb8e0b2ea96046cdf8e95b042715020ebb12d83ea0690db80a8f03d23/greenlet-3.5.6-cp315-cp315t-manylinux_2_39_riscv64.whl", hash = "sha256:520648db8fb92eef7b3e6013f5a6f901cdf0d6685f639c2f7a245879f865bef7", size = 517058, upload-time = "2026-09-14T15:28:44.924Z" },
     { url = "https://files.pythonhosted.org/packages/89/58/c9275fd0ca195d1d3402931bcce8cfcc74726ff76efb1883d229e6e1a3d7/greenlet-3.5.6-cp315-cp315t-musllinux_1_2_aarch64.whl", hash = "sha256:7f924a5a9d5890649566f2f6682e0d8ad8ca23028bacffbbac36dbd7fd680176", size = 1645988, upload-time = "2026-09-14T15:10:13.758Z" },
     { url = "https://files.pythonhosted.org/packages/e0/36/b35747582fa4f1a5453f8f3002405dbac788e450cec7674dc2d204b6ccb5/greenlet-3.5.6-cp315-cp315t-musllinux_1_2_x86_64.whl", hash = "sha256:de9923832f2d8c1a5ecd8d7260465a6ca5a86888a0d129e3bd5cf0406d2fc5bf", size = 1702383, upload-time = "2026-09-14T14:35:58.143Z" },
     { url = "https://files.pythonhosted.org/packages/ed/69/6ec22ac9351e474d2a134d0ff9400dc80362d1c20f0721088ffffdfc205b/greenlet-3.5.6-cp315-cp315t-win_amd64.whl", hash = "sha256:2ab5f42ac6c238eb71770715e6e909ad9a1a92b6c681ccb64cd5a0f07edb953f", size = 331845, upload-time = "2026-09-14T14:27:41.723Z" },
@@ -966,7 +1001,7 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "filelock" },
     { name = "fsspec" },
-    { name = "hf-xet", marker = "platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'" },
+    { name = "hf-xet", marker = "platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
     { name = "packaging" },
     { name = "pyyaml" },
     { name = "requests" },
@@ -1039,7 +1074,9 @@ name = "julius"
 version = "0.2.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "torch" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/1d/c6/5c2aea2b11ead1680bb5b17c996def31f8ccade471cada37cdb93855e06f/julius-0.2.8.tar.gz", hash = "sha256:d691e651200930affea4f6c849c26e95fec846087281ae3d1a7757eac90253d5", size = 48081, upload-time = "2026-06-03T16:05:34.52Z" }
 wheels = [
@@ -1166,7 +1203,9 @@ dependencies = [
     { name = "packaging" },
     { name = "pytorch-lightning" },
     { name = "pyyaml" },
-    { name = "torch" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "torchmetrics" },
     { name = "tqdm" },
     { name = "typing-extensions" },
@@ -1194,7 +1233,7 @@ name = "macholib"
 version = "1.16.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "altgraph" },
+    { name = "altgraph", marker = "(sys_platform != 'linux' and sys_platform != 'win32') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'linux' and extra != 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra != 'extra-6-madgen-cpu')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/10/2f/97589876ea967487978071c9042518d28b958d87b17dceb7cdc1d881f963/macholib-1.16.4.tar.gz", hash = "sha256:f408c93ab2e995cd2c46e34fe328b130404be143469e41bc366c807448979362", size = 59427, upload-time = "2025-11-22T08:28:38.373Z" }
 wheels = [
@@ -1216,8 +1255,34 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+cpu = [
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+]
+cu128 = [
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" } },
+    { name = "torchaudio", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" } },
+    { name = "torchvision", version = "0.23.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" } },
+]
 lyrics = [
     { name = "pyopenjtalk-plus" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "torchvision", version = "0.23.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "whisperx" },
 ]
 
@@ -1240,9 +1305,21 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "setuptools", specifier = "<81" },
     { name = "soundfile", specifier = ">=0.14.0" },
+    { name = "torch", marker = "(sys_platform == 'linux' and extra == 'cpu') or (sys_platform == 'win32' and extra == 'cpu')", specifier = "~=2.8.0", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "madgen", extra = "cpu" } },
+    { name = "torch", marker = "sys_platform != 'linux' and sys_platform != 'win32' and extra == 'cpu'", specifier = "~=2.8.0" },
+    { name = "torch", marker = "extra == 'cu128'", specifier = "~=2.8.0", index = "https://download.pytorch.org/whl/cu128", conflict = { package = "madgen", extra = "cu128" } },
+    { name = "torch", marker = "extra == 'lyrics'", specifier = "~=2.8.0" },
+    { name = "torchaudio", marker = "(sys_platform == 'linux' and extra == 'cpu') or (sys_platform == 'win32' and extra == 'cpu')", specifier = "~=2.8.0", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "madgen", extra = "cpu" } },
+    { name = "torchaudio", marker = "sys_platform != 'linux' and sys_platform != 'win32' and extra == 'cpu'", specifier = "~=2.8.0" },
+    { name = "torchaudio", marker = "extra == 'cu128'", specifier = "~=2.8.0", index = "https://download.pytorch.org/whl/cu128", conflict = { package = "madgen", extra = "cu128" } },
+    { name = "torchaudio", marker = "extra == 'lyrics'", specifier = "~=2.8.0" },
+    { name = "torchvision", marker = "(sys_platform == 'linux' and extra == 'cpu') or (sys_platform == 'win32' and extra == 'cpu')", specifier = "~=0.23.0", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "madgen", extra = "cpu" } },
+    { name = "torchvision", marker = "sys_platform != 'linux' and sys_platform != 'win32' and extra == 'cpu'", specifier = "~=0.23.0" },
+    { name = "torchvision", marker = "extra == 'cu128'", specifier = "~=0.23.0", index = "https://download.pytorch.org/whl/cu128", conflict = { package = "madgen", extra = "cu128" } },
+    { name = "torchvision", marker = "extra == 'lyrics'", specifier = "~=0.23.0" },
     { name = "whisperx", marker = "extra == 'lyrics'", specifier = ">=3.8.6" },
 ]
-provides-extras = ["lyrics"]
+provides-extras = ["lyrics", "cpu", "cu128"]
 
 [package.metadata.requires-dev]
 build = [{ name = "pyinstaller", specifier = ">=6.22.3" }]
@@ -1679,7 +1756,9 @@ name = "nvidia-cublas-cu12"
 version = "12.8.4.1"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/29/99/db44d685f0e257ff0e213ade1964fc459b4a690a73293220e98feb3307cf/nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:b86f6dd8935884615a0683b663891d43781b819ac4f2ba2b0c9604676af346d0", size = 590537124, upload-time = "2025-03-07T01:43:53.556Z" },
     { url = "https://files.pythonhosted.org/packages/dc/61/e24b560ab2e2eaeb3c839129175fb330dfcfc29e5203196e5541a4c44682/nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:8ac4e771d5a348c551b2a426eda6193c19aa630236b418086020df5ba9667142", size = 594346921, upload-time = "2025-03-07T01:44:31.254Z" },
+    { url = "https://files.pythonhosted.org/packages/70/61/7d7b3c70186fb651d0fbd35b01dbfc8e755f69fd58f817f3d0f642df20c3/nvidia_cublas_cu12-12.8.4.1-py3-none-win_amd64.whl", hash = "sha256:47e9b82132fa8d2b4944e708049229601448aaad7e6f296f630f2d1a32de35af", size = 567544208, upload-time = "2025-03-07T01:53:30.535Z" },
 ]
 
 [[package]]
@@ -1687,7 +1766,9 @@ name = "nvidia-cuda-cupti-cu12"
 version = "12.8.90"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/d5/1f/b3bd73445e5cb342727fd24fe1f7b748f690b460acadc27ea22f904502c8/nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:4412396548808ddfed3f17a467b104ba7751e6b58678a4b840675c56d21cf7ed", size = 9533318, upload-time = "2025-03-07T01:40:10.421Z" },
     { url = "https://files.pythonhosted.org/packages/f8/02/2adcaa145158bf1a8295d83591d22e4103dbfd821bcaf6f3f53151ca4ffa/nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:ea0cb07ebda26bb9b29ba82cda34849e73c166c18162d3913575b0c9db9a6182", size = 10248621, upload-time = "2025-03-07T01:40:21.213Z" },
+    { url = "https://files.pythonhosted.org/packages/41/bc/83f5426095d93694ae39fe1311431b5d5a9bb82e48bf0dd8e19be2765942/nvidia_cuda_cupti_cu12-12.8.90-py3-none-win_amd64.whl", hash = "sha256:bb479dcdf7e6d4f8b0b01b115260399bf34154a1a2e9fe11c85c517d87efd98e", size = 7015759, upload-time = "2025-03-07T01:51:11.355Z" },
 ]
 
 [[package]]
@@ -1696,6 +1777,8 @@ version = "12.8.93"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/05/6b/32f747947df2da6994e999492ab306a903659555dddc0fbdeb9d71f75e52/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:a7756528852ef889772a84c6cd89d41dfa74667e24cca16bb31f8f061e3e9994", size = 88040029, upload-time = "2025-03-07T01:42:13.562Z" },
+    { url = "https://files.pythonhosted.org/packages/eb/d1/e50d0acaab360482034b84b6e27ee83c6738f7d32182b987f9c7a4e32962/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:fc1fec1e1637854b4c0a65fb9a8346b51dd9ee69e61ebaccc82058441f15bce8", size = 43106076, upload-time = "2025-03-07T01:41:59.817Z" },
+    { url = "https://files.pythonhosted.org/packages/45/51/52a3d84baa2136cc8df15500ad731d74d3a1114d4c123e043cb608d4a32b/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-win_amd64.whl", hash = "sha256:7a4b6b2904850fe78e0bd179c4b655c404d4bb799ef03ddc60804247099ae909", size = 73586838, upload-time = "2025-03-07T01:52:13.483Z" },
 ]
 
 [[package]]
@@ -1703,7 +1786,9 @@ name = "nvidia-cuda-runtime-cu12"
 version = "12.8.90"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/7c/75/f865a3b236e4647605ea34cc450900854ba123834a5f1598e160b9530c3a/nvidia_cuda_runtime_cu12-12.8.90-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:52bf7bbee900262ffefe5e9d5a2a69a30d97e2bc5bb6cc866688caa976966e3d", size = 965265, upload-time = "2025-03-07T01:39:43.533Z" },
     { url = "https://files.pythonhosted.org/packages/0d/9b/a997b638fcd068ad6e4d53b8551a7d30fe8b404d6f1804abf1df69838932/nvidia_cuda_runtime_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:adade8dcbd0edf427b7204d480d6066d33902cab2a4707dcfc48a2d0fd44ab90", size = 954765, upload-time = "2025-03-07T01:40:01.615Z" },
+    { url = "https://files.pythonhosted.org/packages/30/a5/a515b7600ad361ea14bfa13fb4d6687abf500adc270f19e89849c0590492/nvidia_cuda_runtime_cu12-12.8.90-py3-none-win_amd64.whl", hash = "sha256:c0c6027f01505bfed6c3b21ec546f69c687689aad5f1a377554bc6ca4aa993a8", size = 944318, upload-time = "2025-03-07T01:51:01.794Z" },
 ]
 
 [[package]]
@@ -1711,10 +1796,12 @@ name = "nvidia-cudnn-cu12"
 version = "9.10.2.21"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12" },
+    { name = "nvidia-cublas-cu12", marker = "extra == 'extra-6-madgen-cu128' or extra != 'extra-6-madgen-cpu'" },
 ]
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/fa/41/e79269ce215c857c935fd86bcfe91a451a584dfc27f1e068f568b9ad1ab7/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:c9132cc3f8958447b4910a1720036d9eff5928cc3179b0a51fb6d167c6cc87d8", size = 705026878, upload-time = "2025-06-06T21:52:51.348Z" },
     { url = "https://files.pythonhosted.org/packages/ba/51/e123d997aa098c61d029f76663dedbfb9bc8dcf8c60cbd6adbe42f76d049/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:949452be657fa16687d0930933f032835951ef0892b37d2d53824d1a84dc97a8", size = 706758467, upload-time = "2025-06-06T21:54:08.597Z" },
+    { url = "https://files.pythonhosted.org/packages/3d/90/0bd6e586701b3a890fd38aa71c387dab4883d619d6e5ad912ccbd05bfd67/nvidia_cudnn_cu12-9.10.2.21-py3-none-win_amd64.whl", hash = "sha256:c6288de7d63e6cf62988f0923f96dc339cea362decb1bf5b3141883392a7d65e", size = 692992268, upload-time = "2025-06-06T21:55:18.114Z" },
 ]
 
 [[package]]
@@ -1722,10 +1809,12 @@ name = "nvidia-cufft-cu12"
 version = "11.3.3.83"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12" },
+    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-6-madgen-cu128' or extra != 'extra-6-madgen-cpu'" },
 ]
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/60/bc/7771846d3a0272026c416fbb7e5f4c1f146d6d80704534d0b187dd6f4800/nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:848ef7224d6305cdb2a4df928759dca7b1201874787083b6e7550dd6765ce69a", size = 193109211, upload-time = "2025-03-07T01:44:56.873Z" },
     { url = "https://files.pythonhosted.org/packages/1f/13/ee4e00f30e676b66ae65b4f08cb5bcbb8392c03f54f2d5413ea99a5d1c80/nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:4d2dd21ec0b88cf61b62e6b43564355e5222e4a3fb394cac0db101f2dd0d4f74", size = 193118695, upload-time = "2025-03-07T01:45:27.821Z" },
+    { url = "https://files.pythonhosted.org/packages/7d/ec/ce1629f1e478bb5ccd208986b5f9e0316a78538dd6ab1d0484f012f8e2a1/nvidia_cufft_cu12-11.3.3.83-py3-none-win_amd64.whl", hash = "sha256:7a64a98ef2a7c47f905aaf8931b69a3a43f27c55530c698bb2ed7c75c0b42cb7", size = 192216559, upload-time = "2025-03-07T01:53:57.106Z" },
 ]
 
 [[package]]
@@ -1734,6 +1823,7 @@ version = "1.13.1.3"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bb/fe/1bcba1dfbfb8d01be8d93f07bfc502c93fa23afa6fd5ab3fc7c1df71038a/nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:1d069003be650e131b21c932ec3d8969c1715379251f8d23a1860554b1cb24fc", size = 1197834, upload-time = "2025-03-07T01:45:50.723Z" },
+    { url = "https://files.pythonhosted.org/packages/1e/f5/5607710447a6fe9fd9b3283956fceeee8a06cda1d2f56ce31371f595db2a/nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:4beb6d4cce47c1a0f1013d72e02b0994730359e17801d395bdcbf20cfb3bb00a", size = 1120705, upload-time = "2025-03-07T01:45:41.434Z" },
 ]
 
 [[package]]
@@ -1741,7 +1831,9 @@ name = "nvidia-curand-cu12"
 version = "10.3.9.90"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/45/5e/92aa15eca622a388b80fbf8375d4760738df6285b1e92c43d37390a33a9a/nvidia_curand_cu12-10.3.9.90-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:dfab99248034673b779bc6decafdc3404a8a6f502462201f2f31f11354204acd", size = 63625754, upload-time = "2025-03-07T01:46:10.735Z" },
     { url = "https://files.pythonhosted.org/packages/fb/aa/6584b56dc84ebe9cf93226a5cde4d99080c8e90ab40f0c27bda7a0f29aa1/nvidia_curand_cu12-10.3.9.90-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:b32331d4f4df5d6eefa0554c565b626c7216f87a06a4f56fab27c3b68a830ec9", size = 63619976, upload-time = "2025-03-07T01:46:23.323Z" },
+    { url = "https://files.pythonhosted.org/packages/b9/75/70c05b2f3ed5be3bb30b7102b6eb78e100da4bbf6944fd6725c012831cab/nvidia_curand_cu12-10.3.9.90-py3-none-win_amd64.whl", hash = "sha256:f149a8ca457277da854f89cf282d6ef43176861926c7ac85b2a0fbd237c587ec", size = 62765309, upload-time = "2025-03-07T01:54:20.478Z" },
 ]
 
 [[package]]
@@ -1749,12 +1841,14 @@ name = "nvidia-cusolver-cu12"
 version = "11.7.3.90"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12" },
-    { name = "nvidia-cusparse-cu12" },
-    { name = "nvidia-nvjitlink-cu12" },
+    { name = "nvidia-cublas-cu12", marker = "extra == 'extra-6-madgen-cu128' or extra != 'extra-6-madgen-cpu'" },
+    { name = "nvidia-cusparse-cu12", marker = "extra == 'extra-6-madgen-cu128' or extra != 'extra-6-madgen-cpu'" },
+    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-6-madgen-cu128' or extra != 'extra-6-madgen-cpu'" },
 ]
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/c8/32/f7cd6ce8a7690544d084ea21c26e910a97e077c9b7f07bf5de623ee19981/nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:db9ed69dbef9715071232caa9b69c52ac7de3a95773c2db65bdba85916e4e5c0", size = 267229841, upload-time = "2025-03-07T01:46:54.356Z" },
     { url = "https://files.pythonhosted.org/packages/85/48/9a13d2975803e8cf2777d5ed57b87a0b6ca2cc795f9a4f59796a910bfb80/nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:4376c11ad263152bd50ea295c05370360776f8c3427b30991df774f9fb26c450", size = 267506905, upload-time = "2025-03-07T01:47:16.273Z" },
+    { url = "https://files.pythonhosted.org/packages/13/c0/76ca8551b8a84146ffa189fec81c26d04adba4bc0dbe09cd6e6fd9b7de04/nvidia_cusolver_cu12-11.7.3.90-py3-none-win_amd64.whl", hash = "sha256:4a550db115fcabc4d495eb7d39ac8b58d4ab5d8e63274d3754df1c0ad6a22d34", size = 256720438, upload-time = "2025-03-07T01:54:39.898Z" },
 ]
 
 [[package]]
@@ -1762,10 +1856,12 @@ name = "nvidia-cusparse-cu12"
 version = "12.5.8.93"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12" },
+    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-6-madgen-cu128' or extra != 'extra-6-madgen-cpu'" },
 ]
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/bc/f7/cd777c4109681367721b00a106f491e0d0d15cfa1fd59672ce580ce42a97/nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:9b6c161cb130be1a07a27ea6923df8141f3c295852f4b260c65f18f3e0a091dc", size = 288117129, upload-time = "2025-03-07T01:47:40.407Z" },
     { url = "https://files.pythonhosted.org/packages/c2/f5/e1854cb2f2bcd4280c44736c93550cc300ff4b8c95ebe370d0aa7d2b473d/nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:1ec05d76bbbd8b61b06a80e1eaf8cf4959c3d4ce8e711b65ebd0443bb0ebb13b", size = 288216466, upload-time = "2025-03-07T01:48:13.779Z" },
+    { url = "https://files.pythonhosted.org/packages/62/07/f3b2ad63f8e3d257a599f422ae34eb565e70c41031aecefa3d18b62cabd1/nvidia_cusparse_cu12-12.5.8.93-py3-none-win_amd64.whl", hash = "sha256:9a33604331cb2cac199f2e7f5104dfbb8a5a898c367a53dfda9ff2acb6b6b4dd", size = 284937404, upload-time = "2025-03-07T01:55:07.742Z" },
 ]
 
 [[package]]
@@ -1773,7 +1869,9 @@ name = "nvidia-cusparselt-cu12"
 version = "0.7.1"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/73/b9/598f6ff36faaece4b3c50d26f50e38661499ff34346f00e057760b35cc9d/nvidia_cusparselt_cu12-0.7.1-py3-none-manylinux2014_aarch64.whl", hash = "sha256:8878dce784d0fac90131b6817b607e803c36e629ba34dc5b433471382196b6a5", size = 283835557, upload-time = "2025-02-26T00:16:54.265Z" },
     { url = "https://files.pythonhosted.org/packages/56/79/12978b96bd44274fe38b5dde5cfb660b1d114f70a65ef962bcbbed99b549/nvidia_cusparselt_cu12-0.7.1-py3-none-manylinux2014_x86_64.whl", hash = "sha256:f1bb701d6b930d5a7cea44c19ceb973311500847f81b634d802b7b539dc55623", size = 287193691, upload-time = "2025-02-26T00:15:44.104Z" },
+    { url = "https://files.pythonhosted.org/packages/2f/d8/a6b0d0d0c2435e9310f3e2bb0d9c9dd4c33daef86aa5f30b3681defd37ea/nvidia_cusparselt_cu12-0.7.1-py3-none-win_amd64.whl", hash = "sha256:f67fbb5831940ec829c9117b7f33807db9f9678dc2a617fbe781cac17b4e1075", size = 271020911, upload-time = "2025-02-26T00:14:47.204Z" },
 ]
 
 [[package]]
@@ -1781,6 +1879,7 @@ name = "nvidia-nccl-cu12"
 version = "2.27.3"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/4b/7b/8354b784cf73b0ba51e566b4baba3ddd44fe8288a3d39ef1e06cd5417226/nvidia_nccl_cu12-2.27.3-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:9ddf1a245abc36c550870f26d537a9b6087fb2e2e3d6e0ef03374c6fd19d984f", size = 322397768, upload-time = "2025-06-03T21:57:30.234Z" },
     { url = "https://files.pythonhosted.org/packages/5c/5b/4e4fff7bad39adf89f735f2bc87248c81db71205b62bcc0d5ca5b606b3c3/nvidia_nccl_cu12-2.27.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:adf27ccf4238253e0b826bce3ff5fa532d65fc42322c8bfdfaf28024c0fbe039", size = 322364134, upload-time = "2025-06-03T21:58:04.013Z" },
 ]
 
@@ -1790,6 +1889,8 @@ version = "12.8.93"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f6/74/86a07f1d0f42998ca31312f998bd3b9a7eff7f52378f4f270c8679c77fb9/nvidia_nvjitlink_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:81ff63371a7ebd6e6451970684f916be2eab07321b73c9d244dc2b4da7f73b88", size = 39254836, upload-time = "2025-03-07T01:49:55.661Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/a2/8cee5da30d13430e87bf99bb33455d2724d0a4a9cb5d7926d80ccb96d008/nvidia_nvjitlink_cu12-12.8.93-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:adccd7161ace7261e01bb91e44e88da350895c270d23f744f0820c818b7229e7", size = 38386204, upload-time = "2025-03-07T01:49:43.612Z" },
+    { url = "https://files.pythonhosted.org/packages/ed/d7/34f02dad2e30c31b10a51f6b04e025e5dd60e5f936af9045a9b858a05383/nvidia_nvjitlink_cu12-12.8.93-py3-none-win_amd64.whl", hash = "sha256:bd93fbeeee850917903583587f4fc3a4eafa022e34572251368238ab5e6bd67f", size = 268553710, upload-time = "2025-03-07T01:56:24.13Z" },
 ]
 
 [[package]]
@@ -1797,7 +1898,9 @@ name = "nvidia-nvtx-cu12"
 version = "12.8.90"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
+    { url = "https://files.pythonhosted.org/packages/10/c0/1b303feea90d296f6176f32a2a70b5ef230f9bdeb3a72bddb0dc922dc137/nvidia_nvtx_cu12-12.8.90-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d7ad891da111ebafbf7e015d34879f7112832fc239ff0d7d776b6cb685274615", size = 91161, upload-time = "2025-03-07T01:42:23.922Z" },
     { url = "https://files.pythonhosted.org/packages/a2/eb/86626c1bbc2edb86323022371c39aa48df6fd8b0a1647bc274577f72e90b/nvidia_nvtx_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:5b17e2001cc0d751a5bc2c6ec6d26ad95913324a4adb86788c944f8ce9ba441f", size = 89954, upload-time = "2025-03-07T01:42:44.131Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/99/4c9c0c329bf9fc125008c3b54c7c94c0023518d06fc025ae36431375e1fe/nvidia_nvtx_cu12-12.8.90-py3-none-win_amd64.whl", hash = "sha256:619c8304aedc69f02ea82dd244541a83c3d9d40993381b3b590f1adaed3db41e", size = 56492, upload-time = "2025-03-07T01:52:24.69Z" },
 ]
 
 [[package]]
@@ -1991,7 +2094,7 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
     { name = "python-dateutil" },
-    { name = "tzdata", marker = "sys_platform == 'emscripten' or sys_platform == 'win32'" },
+    { name = "tzdata", marker = "sys_platform == 'emscripten' or sys_platform == 'win32' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/be/4f/5f3422a2afec5ffc46308b79e53291365a93748b498ac2e58bead0197916/pandas-3.0.5.tar.gz", hash = "sha256:dca3734d6ab7c906e6730f0788b0a1dbb9f2467731f9711f77995c8e9d62d712", size = 4658219, upload-time = "2026-07-22T22:19:28.819Z" }
 wheels = [
@@ -2275,9 +2378,14 @@ dependencies = [
     { name = "pytorch-metric-learning" },
     { name = "rich" },
     { name = "safetensors" },
-    { name = "torch" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "torch-audiomentations" },
-    { name = "torchaudio" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "torchcodec" },
     { name = "torchmetrics" },
 ]
@@ -2474,11 +2582,11 @@ version = "6.22.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "altgraph" },
-    { name = "macholib", marker = "sys_platform == 'darwin'" },
+    { name = "macholib", marker = "sys_platform == 'darwin' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
     { name = "packaging" },
-    { name = "pefile", marker = "sys_platform == 'win32'" },
+    { name = "pefile", marker = "sys_platform == 'win32' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
     { name = "pyinstaller-hooks-contrib" },
-    { name = "pywin32-ctypes", marker = "sys_platform == 'win32'" },
+    { name = "pywin32-ctypes", marker = "sys_platform == 'win32' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
     { name = "setuptools" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/63/41/f90302845945abd4ed647933ff5ee7c6ac93983187be67f897b6cb613331/pyinstaller-6.22.3.tar.gz", hash = "sha256:05eb2f5615503e72939a7224d68b4aff572c6b0438ee4a17d0a4b481f399362d", size = 4437180, upload-time = "2026-09-12T21:54:09.669Z" }
@@ -2549,7 +2657,7 @@ name = "pytest"
 version = "9.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
     { name = "iniconfig" },
     { name = "packaging" },
     { name = "pluggy" },
@@ -2581,7 +2689,9 @@ dependencies = [
     { name = "lightning-utilities" },
     { name = "packaging" },
     { name = "pyyaml" },
-    { name = "torch" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "torchmetrics" },
     { name = "tqdm" },
     { name = "typing-extensions" },
@@ -2598,7 +2708,9 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
     { name = "scikit-learn" },
-    { name = "torch" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "tqdm" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/9b/80/6e61b1a91debf4c1b47d441f9a9d7fe2aabcdd9575ed70b2811474eb95c3/pytorch-metric-learning-2.9.0.tar.gz", hash = "sha256:27a626caf5e2876a0fd666605a78cb67ef7597e25d7a68c18053dd503830701f", size = 84530, upload-time = "2025-08-17T17:11:19.501Z" }
@@ -3030,7 +3142,7 @@ name = "sqlalchemy"
 version = "2.0.54"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "greenlet", marker = "platform_machine == 'AMD64' or platform_machine == 'WIN32' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'ppc64le' or platform_machine == 'win32' or platform_machine == 'x86_64'" },
+    { name = "greenlet", marker = "platform_machine == 'AMD64' or platform_machine == 'WIN32' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'ppc64le' or platform_machine == 'win32' or platform_machine == 'x86_64' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
     { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/29/9c/271aa905cf2964f841371a97f3e63ab692bf51b4423d0491e67bc7f64037/sqlalchemy-2.0.54.tar.gz", hash = "sha256:baa8521e8ee9f24e75dfc7aaabc08020e551ef0d48d7c3e3536f5cddf277586b", size = 9969559, upload-time = "2026-09-15T21:06:57.337Z" }
@@ -3165,29 +3277,43 @@ wheels = [
 name = "torch"
 version = "2.8.0"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+]
 dependencies = [
-    { name = "filelock" },
-    { name = "fsspec" },
-    { name = "jinja2" },
-    { name = "networkx" },
-    { name = "nvidia-cublas-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cuda-cupti-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cuda-nvrtc-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cuda-runtime-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cudnn-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cufft-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cufile-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-curand-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cusolver-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cusparse-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-cusparselt-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-nccl-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-nvjitlink-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "nvidia-nvtx-cu12", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "setuptools" },
-    { name = "sympy" },
-    { name = "triton", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "typing-extensions" },
+    { name = "filelock", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "fsspec", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "jinja2", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "networkx", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cublas-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cuda-cupti-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cuda-nvrtc-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cuda-runtime-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cudnn-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cufft-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cufile-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-curand-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cusolver-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cusparse-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cusparselt-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-nccl-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-nvtx-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "setuptools", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "sympy", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "triton", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "typing-extensions", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/49/0c/2fd4df0d83a495bb5e54dca4474c4ec5f9c62db185421563deeb5dabf609/torch-2.8.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:e2fab4153768d433f8ed9279c8133a114a034a61e77a3a104dcdf54388838705", size = 101906089, upload-time = "2025-08-06T14:53:52.631Z" },
@@ -3205,14 +3331,103 @@ wheels = [
 ]
 
 [[package]]
+name = "torch"
+version = "2.8.0+cpu"
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "(python_full_version >= '3.14' and sys_platform == 'linux') or (python_full_version >= '3.14' and sys_platform == 'win32')",
+    "(python_full_version == '3.13.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.13.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.13.*' and sys_platform == 'win32')",
+    "(python_full_version < '3.13' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version < '3.13' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version < '3.13' and sys_platform == 'win32')",
+    "python_full_version == '3.13.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+    "python_full_version < '3.13' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+]
+dependencies = [
+    { name = "filelock", marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "fsspec", marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "jinja2", marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "networkx", marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "setuptools", marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "sympy", marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "typing-extensions", marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp312-cp312-linux_s390x.whl", hash = "sha256:0e34e276722ab7dd0dffa9e12fe2135a9b34a0e300c456ed7ad6430229404eb5", upload-time = "2025-10-01T23:33:41Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:610f600c102386e581327d5efc18c0d6edecb9820b4140d26163354a99cd800d", upload-time = "2025-10-01T23:33:45Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:cb9a8ba8137ab24e36bf1742cb79a1294bd374db570f09fc15a5e1318160db4e", upload-time = "2025-10-01T23:33:48Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp312-cp312-win_amd64.whl", hash = "sha256:2be20b2c05a0cce10430cc25f32b689259640d273232b2de357c35729132256d", upload-time = "2025-10-01T23:33:52Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp312-cp312-win_arm64.whl", hash = "sha256:99fc421a5d234580e45957a7b02effbf3e1c884a5dd077afc85352c77bf41434", upload-time = "2025-10-01T23:34:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp313-cp313-linux_s390x.whl", hash = "sha256:8b5882276633cf91fe3d2d7246c743b94d44a7e660b27f1308007fdb1bb89f7d", upload-time = "2025-10-01T23:34:15Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:a5064b5e23772c8d164068cc7c12e01a75faf7b948ecd95a0d4007d7487e5f25", upload-time = "2025-10-01T23:34:19Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:8f81dedb4c6076ec325acc3b47525f9c550e5284a18eae1d9061c543f7b6e7de", upload-time = "2025-10-01T23:34:23Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp313-cp313-win_amd64.whl", hash = "sha256:e1ee1b2346ade3ea90306dfbec7e8ff17bc220d344109d189ae09078333b0856", upload-time = "2025-10-01T23:34:28Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp313-cp313-win_arm64.whl", hash = "sha256:64c187345509f2b1bb334feed4666e2c781ca381874bde589182f81247e61f88", upload-time = "2025-10-01T23:34:45Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:af81283ac671f434b1b25c95ba295f270e72db1fad48831eb5e4748ff9840041", upload-time = "2025-10-01T23:34:50Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:a9dbb6f64f63258bc811e2c0c99640a81e5af93c531ad96e95c5ec777ea46dab", upload-time = "2025-10-01T23:34:53Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp313-cp313t-win_amd64.whl", hash = "sha256:6d93a7165419bc4b2b907e859ccab0dea5deeab261448ae9a5ec5431f14c0e64", upload-time = "2025-10-01T23:34:58Z" },
+]
+
+[[package]]
+name = "torch"
+version = "2.8.0+cu128"
+source = { registry = "https://download.pytorch.org/whl/cu128" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform == 'win32'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32'",
+    "python_full_version < '3.13' and sys_platform == 'win32'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
+dependencies = [
+    { name = "filelock", marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "fsspec", marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "jinja2", marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "networkx", marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "nvidia-cublas-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cuda-cupti-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cuda-nvrtc-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cuda-runtime-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cudnn-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cufft-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cufile-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-curand-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cusolver-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cusparse-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-cusparselt-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-nccl-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "nvidia-nvtx-cu12", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "setuptools", marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "sympy", marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "triton", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "typing-extensions", marker = "extra == 'extra-6-madgen-cu128'" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cu128/torch-2.8.0%2Bcu128-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:4354fc05bb79b208d6995a04ca1ceef6a9547b1c4334435574353d381c55087c", upload-time = "2025-10-01T23:51:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torch-2.8.0%2Bcu128-cp312-cp312-win_amd64.whl", hash = "sha256:0ad925202387f4e7314302a1b4f8860fa824357f9b1466d7992bf276370ebcff", upload-time = "2025-10-01T23:51:26Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torch-2.8.0%2Bcu128-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:3a852369a38dec343d45ecd0bc3660f79b88a23e0c878d18707f7c13bf49538f", upload-time = "2025-10-01T23:52:56Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torch-2.8.0%2Bcu128-cp313-cp313-win_amd64.whl", hash = "sha256:9e20646802b7fc295c1f8b45fefcfc9fb2e4ec9cbe8593443cd2b9cc307c8405", upload-time = "2025-10-01T23:53:20Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torch-2.8.0%2Bcu128-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:4295a22d69408e93d25f51e8d5d579345b6b802383e9414b0f3853ed433d53ae", upload-time = "2025-10-01T23:54:56Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torch-2.8.0%2Bcu128-cp313-cp313t-win_amd64.whl", hash = "sha256:970b4f4661fa7b44f6a7e6df65de7fc4a6fff2af610dc415c1d695ca5f1f37d2", upload-time = "2025-10-01T23:55:23Z" },
+]
+
+[[package]]
 name = "torch-audiomentations"
 version = "0.12.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "julius" },
-    { name = "torch" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "torch-pitch-shift" },
-    { name = "torchaudio" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/31/8d/2f8fd7e34c75f5ee8de4310c3bd3f22270acd44d1f809e2fe7c12fbf35f8/torch_audiomentations-0.12.0.tar.gz", hash = "sha256:b02d4c5eb86376986a53eb405cca5e34f370ea9284411237508e720c529f7888", size = 52094, upload-time = "2025-01-15T09:07:01.071Z" }
 wheels = [
@@ -3226,8 +3441,13 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "packaging" },
     { name = "primepy" },
-    { name = "torch" },
-    { name = "torchaudio" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/79/a6/722a832bca75d5079f6731e005b3d0c2eec7c6c6863d030620952d143d57/torch_pitch_shift-1.2.5.tar.gz", hash = "sha256:6e1c7531f08d0f407a4c55e5ff8385a41355c5c5d27ab7fa08632e51defbd0ed", size = 4725, upload-time = "2024-09-25T19:10:12.922Z" }
 wheels = [
@@ -3237,9 +3457,43 @@ wheels = [
 [[package]]
 name = "torchaudio"
 version = "2.8.0"
-source = { registry = "https://pypi.org/simple" }
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "python_full_version == '3.13.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+    "python_full_version < '3.13' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+]
 dependencies = [
-    { name = "torch" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:ddef94bf181e6447cbb05f38beaca8f6c5bb8d2b9ddced1aa3452025b9fc70d3", upload-time = "2025-08-05T20:12:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:862e2e40bf09d865e5df080a84c1a39bbcef40e43140f4b1737eb3a389d3b38f", upload-time = "2025-08-05T20:12:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:f851d32e94ca05e470f0c60e25726ec1e0eb71cb2ca5a0206b7fd03272ccc3c8", upload-time = "2025-08-05T20:12:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:09535a9b727c0793cd07c1ace99f3f353626281bcc3e30c2f2314e3ebc9d3f96", upload-time = "2025-08-05T20:12:03Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:68df9c9068984edff8065c2b6656725e6114fe89281b0cf122c7505305fc98a4", upload-time = "2025-08-05T20:12:03Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:1951f10ed092f2dda57634f6a3950ef21c9d9352551aa84a9fccd51bbda18095", upload-time = "2025-08-05T20:12:03Z" },
+]
+
+[[package]]
+name = "torchaudio"
+version = "2.8.0"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+]
+dependencies = [
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ac/cc/c2e2a3eb6ee956f73c68541e439916f8146170ea9cc61e72adea5c995312/torchaudio-2.8.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:ddef94bf181e6447cbb05f38beaca8f6c5bb8d2b9ddced1aa3452025b9fc70d3", size = 1856736, upload-time = "2025-08-06T14:58:36.3Z" },
@@ -3254,6 +3508,54 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/71/76/40fec21b65bccfdc5c8cdb9d511033ab07a7ad4b05f0a5b07f85c68279fc/torchaudio-2.8.0-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:1951f10ed092f2dda57634f6a3950ef21c9d9352551aa84a9fccd51bbda18095", size = 1704199, upload-time = "2025-08-06T14:58:43.594Z" },
     { url = "https://files.pythonhosted.org/packages/8e/53/95c3363413c2f2009f805144160b093a385f641224465fbcd717449c71fb/torchaudio-2.8.0-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:4f7d97494698d98854129349b12061e8c3398d33bd84c929fa9aed5fd1389f73", size = 4020596, upload-time = "2025-08-06T14:59:03.031Z" },
     { url = "https://files.pythonhosted.org/packages/52/27/7fc2d7435af044ffbe0b9b8e98d99eac096d43f128a5cde23c04825d5dcf/torchaudio-2.8.0-cp313-cp313t-win_amd64.whl", hash = "sha256:d4a715d09ac28c920d031ee1e60ecbc91e8a5079ad8c61c0277e658436c821a6", size = 2549553, upload-time = "2025-08-06T14:59:00.019Z" },
+]
+
+[[package]]
+name = "torchaudio"
+version = "2.8.0+cpu"
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "(python_full_version >= '3.14' and sys_platform == 'linux') or (python_full_version >= '3.14' and sys_platform == 'win32')",
+    "(python_full_version == '3.13.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.13.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.13.*' and sys_platform == 'win32')",
+    "(python_full_version < '3.13' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version < '3.13' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version < '3.13' and sys_platform == 'win32')",
+]
+dependencies = [
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:9377faee65a290578280ac7f4884c3586253dac2ca28c60f458ff6efe86a6b05", upload-time = "2025-08-05T20:12:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0%2Bcpu-cp312-cp312-win_amd64.whl", hash = "sha256:9b302192b570657c1cc787a4d487ae4bbb7f2aab1c01b1fcc46757e7f86f391e", upload-time = "2025-08-05T20:12:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:e1b1f530e8b71b1d079e23db45a0e621709061710ef8540aae8280aa039554ee", upload-time = "2025-08-05T20:12:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0%2Bcpu-cp313-cp313-win_amd64.whl", hash = "sha256:0c2d081e24204768e636cbf05e1377c8a6964b8ed6fa3aa5092ba9af9bbc19c5", upload-time = "2025-08-05T20:12:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0%2Bcpu-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:89c2d04fe1cb7c31eb042f7b36e1ce8e2afacf769ecd5f216527e184e4857099", upload-time = "2025-08-05T20:12:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.8.0%2Bcpu-cp313-cp313t-win_amd64.whl", hash = "sha256:ab4653da31dc37f0a643f41f4da8bee647a8686bacf12d3929cac8aead186811", upload-time = "2025-08-05T20:12:02Z" },
+]
+
+[[package]]
+name = "torchaudio"
+version = "2.8.0+cu128"
+source = { registry = "https://download.pytorch.org/whl/cu128" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform == 'win32'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32'",
+    "python_full_version < '3.13' and sys_platform == 'win32'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
+dependencies = [
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchaudio-2.8.0%2Bcu128-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:145b8a0c21cfcaa1705c67173c5d439087e0e120d5da9bc344746f937901d243", upload-time = "2025-08-05T20:12:07Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchaudio-2.8.0%2Bcu128-cp312-cp312-win_amd64.whl", hash = "sha256:cce3a60cd9a97f7360c8f95504ac349311fb7d6b9b826135936764f4de5f782d", upload-time = "2025-08-05T20:12:07Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchaudio-2.8.0%2Bcu128-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:410bb8ea46225efe658e5d27a3802c181a2255913003621a5d25a51aca8018d9", upload-time = "2025-08-05T20:12:07Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchaudio-2.8.0%2Bcu128-cp313-cp313-win_amd64.whl", hash = "sha256:3146bbd48992d215f6bb1aef9626d734c3180b377791ded2a4d4d2c0e63c0cc2", upload-time = "2025-08-05T20:12:07Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchaudio-2.8.0%2Bcu128-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:04b410f93337fc6c16576d0c88e2a31091aef9d1fd212ebb8cd26899dba175e0", upload-time = "2025-08-05T20:12:07Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchaudio-2.8.0%2Bcu128-cp313-cp313t-win_amd64.whl", hash = "sha256:1054e0a7613cac54ed9b3784a5fcbe023748a70004d9cca74c5f9ae00a1fdfd1", upload-time = "2025-08-05T20:12:07Z" },
 ]
 
 [[package]]
@@ -3277,7 +3579,9 @@ dependencies = [
     { name = "lightning-utilities" },
     { name = "numpy" },
     { name = "packaging" },
-    { name = "torch" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/81/34/39b8b749333db56c0585d7a11fa62a283c087bb1dfc897d69fb8cedbefb1/torchmetrics-1.9.0.tar.gz", hash = "sha256:a488609948600df52d3db4fcdab02e62aab2a85ef34da67037dc3e65b8512faa", size = 581765, upload-time = "2026-03-09T17:41:22.443Z" }
 wheels = [
@@ -3287,11 +3591,47 @@ wheels = [
 [[package]]
 name = "torchvision"
 version = "0.23.0"
-source = { registry = "https://pypi.org/simple" }
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "python_full_version == '3.13.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+    "python_full_version < '3.13' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+]
 dependencies = [
-    { name = "numpy" },
-    { name = "pillow" },
-    { name = "torch" },
+    { name = "numpy", marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "pillow", marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:e0e2c04a91403e8dd3af9756c6a024a1d9c0ed9c0d592a8314ded8f4fe30d440", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:6dd7c4d329a0e03157803031bc856220c6155ef08c26d4f5bbac938acecf0948", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:1c37e325e09a184b730c3ef51424f383ec5745378dc0eca244520aca29722600", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:2f7fd6c15f3697e80627b77934f77705f3bc0e98278b989b2655de01f6903e1d", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:2df618e1143805a7673aaf82cb5720dd9112d4e771983156aaf2ffff692eebf9", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:2a3299d2b1d5a7aed2d3b6ffb69c672ca8830671967eb1cee1497bacd82fe47b", upload-time = "2025-08-05T20:11:47Z" },
+]
+
+[[package]]
+name = "torchvision"
+version = "0.23.0"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128'",
+]
+dependencies = [
+    { name = "numpy", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "pillow", marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/df/1d/0ea0b34bde92a86d42620f29baa6dcbb5c2fc85990316df5cb8f7abb8ea2/torchvision-0.23.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:e0e2c04a91403e8dd3af9756c6a024a1d9c0ed9c0d592a8314ded8f4fe30d440", size = 1856885, upload-time = "2025-08-06T14:58:06.503Z" },
@@ -3309,11 +3649,63 @@ wheels = [
 ]
 
 [[package]]
+name = "torchvision"
+version = "0.23.0+cpu"
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "(python_full_version >= '3.14' and sys_platform == 'linux') or (python_full_version >= '3.14' and sys_platform == 'win32')",
+    "(python_full_version == '3.13.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.13.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.13.*' and sys_platform == 'win32')",
+    "(python_full_version < '3.13' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version < '3.13' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version < '3.13' and sys_platform == 'win32')",
+]
+dependencies = [
+    { name = "numpy", marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "pillow", marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:ae459d4509d3b837b978dc6c66106601f916b6d2cda75c137e3f5f48324ce1da", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp312-cp312-win_amd64.whl", hash = "sha256:a651ccc540cf4c87eb988730c59c2220c52b57adc276f044e7efb9830fa65a1d", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:dea90a67d60a5366b0358a0b8d6bf267805278697d6fd950cf0e31139e56d1be", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp313-cp313-win_amd64.whl", hash = "sha256:82928788025170c62e7df1120dcdc0cd175bfc31c08374613ce6d1a040bc0cda", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:474d77adbbbed5166db3e5636b4b4ae3399c66ef5bfa12536e254b32259c90c0", upload-time = "2025-08-05T20:11:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp313-cp313t-win_amd64.whl", hash = "sha256:8d6a47e23d7896f0ef9aa7ea7179eb6324e82438aa66d19884c2020d0646b104", upload-time = "2025-08-05T20:11:47Z" },
+]
+
+[[package]]
+name = "torchvision"
+version = "0.23.0+cu128"
+source = { registry = "https://download.pytorch.org/whl/cu128" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform == 'win32'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32'",
+    "python_full_version < '3.13' and sys_platform == 'win32'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
+dependencies = [
+    { name = "numpy", marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "pillow", marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchvision-0.23.0%2Bcu128-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:9cb3c13997afcb44057ca10d943c6c4cba3068afde0f370965abce9c89fcffa9", upload-time = "2025-08-05T20:11:52Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchvision-0.23.0%2Bcu128-cp312-cp312-win_amd64.whl", hash = "sha256:20fa9c7362a006776630b00b8a01919fedcf504a202b81358d32c5aef39956fe", upload-time = "2025-08-05T20:11:51Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchvision-0.23.0%2Bcu128-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:c63982f1973ba677b37e6663df0e07cb5381459b6f0572c2ca95eebd8dfeb742", upload-time = "2025-08-05T20:11:52Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchvision-0.23.0%2Bcu128-cp313-cp313-win_amd64.whl", hash = "sha256:f69174bc69474bd4d1405bac3ebd35bb39c8267ce6b8a406070cb3149c72e3b8", upload-time = "2025-08-05T20:11:51Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchvision-0.23.0%2Bcu128-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:0d6ff6489eb71e4c0bb08cf7cb253298c2520458b1bd67036733652acfa87f00", upload-time = "2025-08-05T20:11:52Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchvision-0.23.0%2Bcu128-cp313-cp313t-win_amd64.whl", hash = "sha256:91fd897fb6fefaf25ec56897391b448eff73f28a7e2ab7660886ece85c865ec6", upload-time = "2025-08-05T20:11:52Z" },
+]
+
+[[package]]
 name = "tqdm"
 version = "4.70.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/0d/ea/b2a5bd54b28a324dae8211928b2d730b6547500342c7e6c6dea08bd0a485/tqdm-4.70.1.tar.gz", hash = "sha256:cefd0eca11b2a37a3aee776544d4f4ae913f02688135b5556b8788dfa474afc4", size = 171846, upload-time = "2026-09-11T07:25:16.601Z" }
 wheels = [
@@ -3346,7 +3738,7 @@ name = "triton"
 version = "3.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "setuptools" },
+    { name = "setuptools", marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra != 'extra-6-madgen-cpu') or (python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux') or (platform_machine != 'aarch64' and sys_platform == 'linux') or (platform_python_implementation != 'CPython' and sys_platform == 'linux') or sys_platform == 'win32' or (sys_platform != 'linux' and extra != 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d0/66/b1eb52839f563623d185f0927eb3530ee4d5ffe9d377cdaf5346b306689e/triton-3.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:31c1d84a5c0ec2c0f8e8a072d7fd150cab84a9c239eaddc6706c081bfae4eb04", size = 155560068, upload-time = "2025-07-30T19:58:37.081Z" },
@@ -3406,12 +3798,20 @@ dependencies = [
     { name = "omegaconf" },
     { name = "pandas" },
     { name = "pyannote-audio" },
-    { name = "torch" },
-    { name = "torchaudio" },
-    { name = "torchcodec", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux') or sys_platform == 'darwin' or sys_platform == 'win32'" },
-    { name = "torchvision" },
+    { name = "torch", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torch", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchaudio", version = "2.8.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
+    { name = "torchcodec", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or sys_platform == 'darwin' or sys_platform == 'win32' or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (python_full_version >= '3.14' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_machine != 'aarch64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (platform_python_implementation != 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (extra != 'extra-6-madgen-cpu' and extra != 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.14' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_machine != 'aarch64' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (platform_python_implementation != 'CPython' and sys_platform == 'linux' and extra == 'extra-6-madgen-cpu') or (sys_platform == 'win32' and extra == 'extra-6-madgen-cpu') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
+    { name = "torchvision", version = "0.23.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "extra == 'extra-6-madgen-cu128'" },
     { name = "transformers" },
-    { name = "triton", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "triton", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux') or (platform_machine != 'x86_64' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128') or (sys_platform != 'linux' and extra == 'extra-6-madgen-cpu' and extra == 'extra-6-madgen-cu128')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a0/51/4ffeb1dce4f9fa95e1688d6ee6c6f412f67f786a5f4856e906503b8502c9/whisperx-3.8.6.tar.gz", hash = "sha256:d647aecaa6c2f413bb924d722d925878ef300c99093ca49cd6cb7840bdbffe0e", size = 16490881, upload-time = "2026-05-25T12:36:06.72Z" }
 wheels = [

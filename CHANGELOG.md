@@ -6,6 +6,7 @@
 
 ### 追加
 
+- リポジトリから歌詞モードを使う際に、`--extra cpu` / `--extra cu128` で PyTorch の種類を選べるようにした。`uv run` の同期で意図しない種類に置き換わることを避けるため、取得先を選択した extra に合わせる（[#17]）。
 - 打楽器トラック（GM のチャンネル10）を、音素の素材から作るようにした（[#13]）。楽器ごとに音素を割り当て、同じ楽器には同じ音、別の楽器には別の音を使う。`--percussion pitched` で以前の動作に戻せる。
 - トラックごとのフィルタ・EQ を追加した（[#14]）。`--filter Bass=lp:800` のように指定する。
 - 打楽器の楽器ごとに使う音素を指定できるようにした（[#13]）。`--drum-material キック=b,g` のように、楽器名か GM のノート番号で指定する。
@@ -62,4 +63,5 @@
 [#4]: https://github.com/0266st/madgen/pull/4
 [#6]: https://github.com/0266st/madgen/pull/6
 [#16]: https://github.com/0266st/madgen/pull/16
+[#17]: https://github.com/0266st/madgen/pull/17
 [#18]: https://github.com/0266st/madgen/pull/18

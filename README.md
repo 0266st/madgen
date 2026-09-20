@@ -42,6 +42,8 @@ pip には環境を見て選ぶ機能がありません。**上の表で CPU 専
 uv pip install --torch-backend=auto "madgen[lyrics]"
 ```
 
+配布版の `uv tool install` / `uv pip install` / `pip install` には、下記のリポジトリ専用の `tool.uv.sources` 設定は適用されません。配布版では上記の `--torch-backend=auto`、リポジトリでは下記の `--extra cpu` / `--extra cu128` で PyTorch の取得先を選んでください。
+
 ### Windows / Linux 版（Python を入れずに使う）
 
 [Releases](https://github.com/0266st/madgen/releases) から、環境に合うものを落として展開してください。
@@ -67,14 +69,19 @@ tar xzf madgen-vX.Y.Z-linux-x64.tar.gz && cd madgen-vX.Y.Z-linux-x64
 リポジトリを直接使う場合:
 
 ```sh
-uv sync                  # メロディモードだけならこれで十分
-uv sync --extra lyrics   # 歌詞モードの素材解析（whisperX, torch, pyopenjtalk）も使う場合
+uv sync                                # メロディモードだけならこれで十分
+uv sync --extra lyrics --extra cpu      # 歌詞モード: CPU
+uv sync --extra lyrics --extra cu128    # 歌詞モード: NVIDIA GPU（CUDA 12.8、Windows / Linux）
 ```
 
+`cpu` と `cu128` はどちらか一方を選び、`uv run` にも同じ extra を指定してください。PyTorch・torchaudio・torchvision の取得先を extra ごとに固定するため、手動で GPU 版を入れ直す必要はありません。両方を同時に指定すること（`--all-extras` を含む）はできません。
+
+macOS は `cpu` を使ってください（PyTorch は通常の index から取得します）。`cu128` は対応する NVIDIA GPU とドライバーが必要です。`--device cpu` / `cuda` は実行時の選択で、インストールする PyTorch の種類は変更しません。**`--extra lyrics` の単独指定は推奨しません。** `cpu` / `cu128` を省くと PyTorch は通常の index から取得され、PyPI の既定では環境によって CPU / CUDA の種類が異なります（上の表を参照）。GPU があっても CPU 版が入る場合があるため、バックエンドを明示してください。
+
 - ffmpeg は `imageio-ffmpeg` の静的バイナリを使うので、システムへのインストールは不要です。
-- **歌詞モードの素材解析には GPU（CUDA）が実質必須です**（上級者向け）。初回は whisperX large-v3 と音素認識モデル（計約4 GB）をダウンロードします。
+- 歌詞モードの素材解析は GPU（CUDA）を推奨します。CPU では `--device cpu --whisper-model small` を指定してください。既定の large-v3 を使う場合、初回は whisperX と音素認識モデル（計約4 GB）をダウンロードします。
 - メロディモードだけなら GPU は不要です。素材解析・マッチング・合成・動画はすべて CPU で動きます。
-- `uv add` / `uv remove` / `uv sync`（extra 指定なし）を実行すると lyrics extra がアンインストールされます。その後は `uv sync --extra lyrics` で入れ直してください。`uv run` だけなら消えません。
+- `uv sync` を extra 指定なしで実行すると歌詞モードの依存が削除されます。再導入する場合も `uv sync --extra lyrics --extra cpu` または `--extra cu128` を指定してください。`uv run` は通常、余分なパッケージを削除しませんが、選択した依存定義に合わせてパッケージを置き換えることがあります。
 
 ## クイックスタート
 
@@ -89,14 +96,14 @@ uv run madgen render --db work/corpus.sqlite --melody target/target.mid \
     --out-dir work/out --video --split-parts
 ```
 
-歌わせる場合（歌詞モード）:
+歌わせる場合（歌詞モード、NVIDIA GPU）:
 
 ```sh
 # 素材の音素解析を追加（音高の解析が済んでいる素材は、音素の解析だけを行う）
-uv run --extra lyrics madgen build-corpus --source sources/ --db work/corpus.sqlite --phonemes wav2vec2
+uv run --extra lyrics --extra cu128 madgen build-corpus --source sources/ --db work/corpus.sqlite --phonemes wav2vec2
 
 # 歌パート（USTX）＋伴奏（歌トラックを抜いた MIDI）
-uv run madgen render --db work/corpus.sqlite \
+uv run --extra lyrics --extra cu128 madgen render --db work/corpus.sqlite \
     --ust target/iwashi.ustx --melody target/iwashi.mid \
     --out-dir work/iwashi --video --split-parts
 ```
@@ -104,8 +111,15 @@ uv run madgen render --db work/corpus.sqlite \
 `auto` は `build-corpus` と `render` を続けて実行します（`--ust` があれば音素解析も行う）。
 
 ```sh
-uv run --extra lyrics madgen auto --source sources/ --db work/corpus.sqlite \
+uv run --extra lyrics --extra cu128 madgen auto --source sources/ --db work/corpus.sqlite \
     --ust target/iwashi.ustx --melody target/iwashi.mid --out-dir work/iwashi --video --split-parts
+```
+
+CPU で素材を解析する場合は、次のように実行します。解析後の `render` にも `--extra lyrics --extra cpu` を指定できます。
+
+```sh
+uv run --extra lyrics --extra cpu madgen build-corpus --source sources/ --db work/corpus.sqlite \
+    --phonemes wav2vec2 --device cpu --whisper-model small
 ```
 
 ## 出力
