@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-20
+
 ### 追加
 
 - リポジトリから歌詞モードを使う際に、`--extra cpu` / `--extra cu128` で PyTorch の種類を選べるようにした。`uv run` の同期で意図しない種類に置き換わることを避けるため、取得先を選択した extra に合わせる（[#17]）。
@@ -53,7 +55,8 @@
 
 - 最初の公開。メロディ（MIDI）に合わせて素材を切り貼りし、音声と動画を生成する。
 
-[Unreleased]: https://github.com/0266st/madgen/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/0266st/madgen/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/0266st/madgen/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/0266st/madgen/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/0266st/madgen/releases/tag/v0.1.0
 [#13]: https://github.com/0266st/madgen/issues/13
